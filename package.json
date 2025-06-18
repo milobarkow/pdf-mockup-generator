@@ -1,0 +1,20 @@
+{
+  "name": "pdf-mockups",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.2.133"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
