@@ -1,0 +1,89 @@
+body {
+    margin: 0; 
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+canvas {
+    display: flex;
+    border: 1px solid black;
+    direction: ltr;
+    margin: 0.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  padding: 1%;
+  margin: 0.5rem;
+}
+
+input {
+    width: 95%;
+    margin-top: 0.25rem; 
+    margin-bottom: 0.25rem; 
+}
+
+.color-input {
+    width: 4rem;
+    margin-top: 0.25rem; 
+    margin-bottom: 0.25rem; 
+    margin-left: 0.25rem; 
+    margin-right: 0.25rem; 
+}
+
+button {
+    width: 50%;
+    align-self: center;
+    margin-top: 1rem; 
+}
+
+.main-label {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.sub-label {
+  font-size: 1.1rem;
+}
+
+
+.image-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 0.5rem; /* space between the input and button */
+  margin-bottom: 0.25rem;
+  width: 95%;
+}
+
+.image-input-group input[type="file"] {
+  flex: 1;
+  max-width: 50%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.image-input-group button {
+  margin: auto;
+  display: flex;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.form-buttons {
+  display: flex;
+  flex-direction: column;
+  grid-auto-columns: max-content;
+  margin-top: 5%;
+}
+
+.form-buttons button {
+  width: 100%;
+  margin: 1rem;
+}
