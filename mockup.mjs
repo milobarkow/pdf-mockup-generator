@@ -7,6 +7,7 @@ const marginSide = 35;
 let X = 0;
 let Y = 0;
 
+
 async function getImg(pdfDoc, img, fromUpload = false) {
     var imgBytes, imgType;
     if (fromUpload) {

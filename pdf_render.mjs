@@ -152,7 +152,7 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         togglePrintPreview();
     }
 
-    pdfBytes = await createPdf();
+    var pdfBytes = await createPdf();
     renderPdf(pdfBytes);
 
     if (action === "exportPdf") {
