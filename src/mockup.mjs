@@ -139,9 +139,9 @@ function getCaptionString(capObj) {
 var pdfInfo = {
     title: "Title",
     subtitle: "Subtitle",
-    logoPath: "/logo.png",
-    globePath: "/globe.png",
-    instaLogoPath: "/insta.png",
+    logoPath: "/pdf-mockup-generator/logo.png",
+    globePath: "/pdf-mockup-generator/globe.png",
+    instaLogoPath: "/pdf-mockup-generator/insta.png",
     website: "www.jointprinting.com",
     instagram: "@jointprinting",
     shirtFrontImg: "",
