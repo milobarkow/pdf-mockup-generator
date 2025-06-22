@@ -1,4 +1,5 @@
 node_modules/
+build/
 style_old.css
 pdf_render2.mjs
 *.pdf
