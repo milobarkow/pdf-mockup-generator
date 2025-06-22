@@ -1,16 +1,5 @@
 import { createPdf, updatePdfInfo, updatePdfImageInfo, resetPdfInfo, getPdfInfo, togglePrintPreview } from './mockup.mjs';
 
-// import pdfjsWorker from './pdfjs-dist/build/pdf.worker.mjs';
-// pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs-dist/build/pdf.worker.mjs';
-// pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs-dist/build/pdf.worker.mjs';
-
-// if (!pdfjsLib.getDocument || !pdfjsViewer.PDFPageView) {
-//     // eslint-disable-next-line no-alert
-//     alert("Please build the pdfjs-dist library using\n  `gulp dist-install`");
-// }
-
-// pdfjsLib.GlobalWorkerOptions.workerSrc = "./node_modules/pdfjs-dist/build/pdf.worker.mjs"; // // The workerSrc property shall be specified.
-
 function renderPdf(pdfData) {
     var loadingTask;
     if (typeof pdfData === "undefined") {
