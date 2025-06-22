@@ -4,9 +4,6 @@ const pageWidth = 720;
 const pageHeight = 1080;
 const marginTop = 25;
 const marginSide = 35;
-let X = 0;
-let Y = 0;
-
 
 async function getImg(pdfDoc, img, fromUpload = false) {
     var imgBytes, imgType;
@@ -185,10 +182,7 @@ export async function updatePdfInfo(title, subtitle,
     backLogoImageFile, backLogoColors,
     mockupNum, pdfName) {
     if (title) pdfInfo.title = title;
-    // else pdfInfo.title = "";
-
     if (subtitle) pdfInfo.subtitle = subtitle;
-    // else pdfInfo.subtitle = "";
 
     if (shirtFrontImageFile) pdfInfo.shirtFrontImg = shirtFrontImageFile;
     if (c1Type) pdfInfo.c1.type = c1Type;
@@ -207,10 +201,12 @@ export async function updatePdfInfo(title, subtitle,
     if (backLogoColors) pdfInfo.backLogoColors = backLogoColors;
 
     if (mockupNum) pdfInfo.mockupNum = mockupNum;
-    // else pdfInfo.mockupNum = "";
 
-    if (pdfName) pdfInfo.pdfName = pdfName;
-    else pdfInfo.pdfName = defaultPdfInfo.pdfName;
+    if (pdfName) {
+        pdfInfo.pdfName = pdfName;
+    } else {
+        pdfInfo.pdfName = defaultPdfInfo.pdfName;
+    }
 }
 
 export async function getPdfInfo() {
@@ -363,7 +359,6 @@ export async function createPdf() {
         width: pageWidth / 2 - marginSide * 2,
         height: pageWidth / 2 - marginSide * 2,
     }
-    // const frontLogoDims = frontLogo.scale((pageWidth - marginSide * 5) / frontLogo.size().width / 2);
     const frontLogoX = marginSide;
     const frontLogoY = Math.min(c1TextBottomY, c2TextBottomY) - frontLogoDims.height - captionLineHeight / 2;
     if (pdfInfo.frontLogoImg != "") {
@@ -378,7 +373,6 @@ export async function createPdf() {
         width: pageWidth / 2 - marginSide * 2,
         height: pageWidth / 2 - marginSide * 2,
     }
-    // const backLogoDims = backLogo.scale((pageWidth - marginSide * 5) / backLogo.size().width / 2);
     const backLogoX = p2X;
     const backLogoY = Math.min(c1TextBottomY, c2TextBottomY) - backLogoDims.height - captionLineHeight / 2;
     if (pdfInfo.backLogoImg != "") {
@@ -392,7 +386,6 @@ export async function createPdf() {
     const frontLogoColors = pdfInfo.frontLogoColors
         .filter(color => color.trim() !== "") // remove empty strings
         .map(color => color.replace(/^#/, "")); // remove leading #
-    // let colorCount = Math.max(frontLogoColors.length, pdfInfo.backLogoColors.length);
     const circleSize = 26; // radius
 
     //  FRONT LOGO COLORS
@@ -434,6 +427,4 @@ export async function createPdf() {
 
     const pdfBytes = await pdfDoc.save();
     return pdfBytes;
-    // fs.writeFileSync(pdfName, pdfBytes);
-    // console.log(`PDF saved as ${pdfName}`);
 }

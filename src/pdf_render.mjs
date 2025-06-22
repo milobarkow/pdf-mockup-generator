@@ -4,8 +4,6 @@ function renderPdf(pdfData) {
     var loadingTask;
     if (typeof pdfData === "undefined") {
         console.error("no PDF data provided");
-        // const PDF_URL = "./test.pdf";
-        // loadingTask = pdfjsLib.getDocument(PDF_URL);
     } else {
         loadingTask = pdfjsLib.getDocument({ data: pdfData });
     }
