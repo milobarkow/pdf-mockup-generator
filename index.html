@@ -8,16 +8,17 @@
 
   <title>PDF Mockup Generator</title>
 
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./src/style.css">
 
-  <script src="./node_modules/pdfjs-dist/build/pdf.mjs" type="module"></script>
-  <script src="./node_modules/pdfjs-dist/web/pdf_viewer.mjs" type="module"></script>
+  <script src="./src/pdfjs-dist/build/pdf.mjs" type="module"></script>
+  <script src="./src/pdfjs-dist/build/pdf.worker.mjs" type="module"></script>
+  <script src="./src/pdfjs-dist/web/pdf_viewer.mjs" type="module"></script>
   <script src="https://unpkg.com/pdf-lib"></script>
 </head>
 
 <body tabindex="1" >
 
-  <script src="./pdf_render.mjs" type="module"></script>
+  <script src="./src/pdf_render.mjs" type="module"></script>
 
   <div class="container">
     <canvas id="pdf-canvas"></canvas>
