@@ -1,16 +1,10 @@
 {
   "name": "pdf-mockups",
-  "version": "1.0.0",
-  "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
     "prev": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "vite": "^6.3.5"
   },
