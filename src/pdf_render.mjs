@@ -1,6 +1,9 @@
 import { createPdf, updatePdfInfo, updatePdfImageInfo, resetPdfInfo, getPdfInfo, togglePrintPreview } from './mockup.mjs';
 
-function renderPdf(pdfData) {
+var canvas = document.getElementById('pdf-canvas');
+var context = canvas.getContext('2d');
+
+async function renderPdf(pdfData) {
     var loadingTask;
     if (typeof pdfData === "undefined") {
         console.error("no PDF data provided");
@@ -8,39 +11,57 @@ function renderPdf(pdfData) {
         loadingTask = pdfjsLib.getDocument({ data: pdfData });
     }
 
-    loadingTask.promise.then(function(pdf) {
-        pdf.getPage(1).then(function(page) {
-            var scale = 1;
-            var viewport = page.getViewport({ scale: scale, });
+    // loadingTask.promise.then(async function(pdf) {
+    var pdf = await loadingTask.promise;
 
-            var outputScale = window.devicePixelRatio || 1; // Support HiDPI-screens.
+    const pageViewports = [];
+    var totalHeight = 0;
+    var maxWidth = 0;
+    var scale = 1;
 
-            var canvas = document.getElementById('pdf-canvas');
-            var context = canvas.getContext('2d');
+    console.log(`pdf page count: ${pdf.numPages}`);
 
-            canvas.width = Math.floor(viewport.width * outputScale);
-            canvas.height = Math.floor(viewport.height * outputScale);
-            canvas.style.width = Math.floor(viewport.width) + "px";
-            canvas.style.height = Math.floor(viewport.height) + "px";
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: scale });
+        totalHeight += viewport.height;
+        maxWidth = Math.max(maxWidth, viewport.width);
+        pageViewports.push({ page, viewport });
+    }
 
-            var transform = outputScale !== 1
-                ? [outputScale, 0, 0, outputScale, 0, 0]
-                : null;
+    var outputScale = 0.9;
+    canvas.width = Math.floor(maxWidth * outputScale);
+    canvas.height = Math.floor(totalHeight * outputScale);
 
-            var renderContext = {
-                canvasContext: context,
-                transform: transform,
-                viewport: viewport
-            };
-            page.render(renderContext);
-        });
-    });
+    var yOffset = 0;
+
+    for (let i = 0; i < pdf.numPages; i++) {
+        const page = pageViewports[i].page;
+        const viewport = pageViewports[i].viewport;
+
+        context.strokeStyle = '#ccc';     // light gray border
+        context.lineWidth = 2;
+        context.strokeRect(0, yOffset, viewport.width, viewport.height);
+
+        context.save();
+        var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+        context.translate(0, yOffset);
+        var renderContext = {
+            canvasContext: context,
+            transform: transform,
+            viewport: viewport
+        };
+        await page.render(renderContext).promise;
+        context.restore();
+
+        yOffset += viewport.height;
+    }
 }
 
 // set defaults and render on initial open
 (async () => {
     const pdfBytes = await createPdf();
-    renderPdf(pdfBytes);
+    await renderPdf(pdfBytes);
 })();
 
 async function exportPdf(pdfBytes) {
@@ -53,7 +74,7 @@ async function exportPdf(pdfBytes) {
     // Create a download link and trigger it
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = pdfInfo.pdfName; 
+    link.download = pdfInfo.pdfName;
     document.body.appendChild(link);
     link.click();
 
@@ -87,7 +108,6 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         const c2Type = form.printTypeBack.value;
         const c2Dims = form.printDimsBack.value;
         const c2Loc = form.printLocBack.value;
-
 
         const frontLogoImageFile = document.getElementById("frontLogoImage").files[0];
         const fcolor1 = form.fcolor1.value;

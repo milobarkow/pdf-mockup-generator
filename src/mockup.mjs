@@ -217,11 +217,7 @@ export async function resetPdfInfo() {
     Object.assign(pdfInfo, defaultPdfInfo);
 }
 
-export async function createPdf() {
-    const pdfDoc = await PDFDocument.create();
-
-    const page = pdfDoc.addPage([pageWidth, pageHeight]);
-
+async function template1(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const socialsFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
@@ -423,7 +419,17 @@ export async function createPdf() {
         x: mottoX, y: mottoY,
         size: mottoFontSize, font: motoFont, color: titleColor,
     })
+    return pdfDoc
+}
 
+export async function createPdf() {
+    var pdfDoc = await PDFDocument.create();
+
+    const page1 = pdfDoc.addPage([pageWidth, pageHeight]);
+    const page2 = pdfDoc.addPage([pageWidth, pageHeight]);
+
+    await template1(pdfDoc, page1);
+    await template1(pdfDoc, page2);
 
     const pdfBytes = await pdfDoc.save();
     return pdfBytes;
