@@ -1,4 +1,4 @@
-import { createPdf, updatePdfInfo, updatePdfImageInfo, resetPdfInfo, getPdfInfo, togglePrintPreview } from './mockup.mjs';
+import { createPdf, updatePdfInfo, updatePdfImageInfo, resetPdfInfo, getPdfInfo, togglePrintPreview, updateCurrentPage } from './mockup.mjs';
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
@@ -86,6 +86,28 @@ async function exportPdf(pdfBytes) {
     return true;
 }
 
+document.getElementById("page-info-form").addEventListener("submit", async function(e) {
+    e.preventDefault(); // prevent page reload
+
+    const form = e.target;
+
+    const currentPage = parseInt(form.currentPage.value, 10);
+    const currentPageInput = document.getElementById("currentPage");
+
+    const minPage = currentPageInput.min;
+    const maxPage = currentPageInput.max;
+    if (currentPage < minPage || currentPage > maxPage) {
+        alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
+    }
+
+    const currentPageType = form.currentPageType.value;
+
+    await updateCurrentPage(currentPage, currentPageType);
+
+    var pdfBytes = await createPdf();
+    renderPdf(pdfBytes);
+});
+
 document.getElementById("pdfForm").addEventListener("submit", async function(e) {
     e.preventDefault(); // prevent page reload
 
@@ -156,12 +178,18 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         } else if (id == "shirtBackImgClear") {
             document.getElementById("shirtBackImage").value = "";
             updatePdfImageInfo(null, "", null, null);
+        } else if (id == "shirtFrontLogoClear") {
+            document.getElementById("frontLogoImage").value = "";
+            updatePdfImageInfo(null, null, "", null);
+        } else if (id == "shirtBackLogoClear") {
+            document.getElementById("backLogoImage").value = "";
+            updatePdfImageInfo(null, null, null, "");
         }
         return;
     } else if (action === "togglePrintPreview") {
         console.log("toggling print preview (border boxes)");
         togglePrintPreview();
-    }
+    } 
 
     var pdfBytes = await createPdf();
     renderPdf(pdfBytes);

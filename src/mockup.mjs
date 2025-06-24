@@ -133,6 +133,8 @@ function getCaptionString(capObj) {
     return caption;
 }
 
+var pdfPages = [];
+
 var pdfInfo = {
     title: "Title",
     subtitle: "Subtitle",
@@ -217,6 +219,102 @@ export async function resetPdfInfo() {
     Object.assign(pdfInfo, defaultPdfInfo);
 }
 
+async function template2(pdfDoc, page) {
+    // FONTS
+    const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const socialsFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+    const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+
+    // HEADER
+    const logo = await getImg(pdfDoc, pdfInfo.logoPath);
+    const logoDims = logo.scale(0.70);
+    const logoX = marginSide;
+    const logoY = pageHeight - logoDims.height - marginTop;
+    putImage(page, logo, logoX, logoY, logoDims.width, logoDims.height, false);
+
+    // TITTLE
+    const titleFontSize = 28;
+    const subtitleFontSize = 20;
+    const titleColor = hexToRgb('#4d4e4e');
+    const titleX = marginSide;
+    const titleY = pageHeight - logoDims.height - marginTop - titleFontSize * 1.3;
+    const subtitleY = titleY - titleFontSize;
+    page.drawText(pdfInfo.title, {
+        x: titleX, y: titleY,
+        size: titleFontSize, font: titleFont, color: titleColor,
+    })
+    page.drawText(pdfInfo.subtitle, {
+        x: titleX, y: subtitleY,
+        size: subtitleFontSize, font: titleFont, color: titleColor,
+    })
+
+    // SOCIALS
+    const socialsFontSize = 16;
+    const socialsTextColor = hexToRgb('#000000');
+
+    const websiteX = pageWidth - marginSide - socialsFont.widthOfTextAtSize(pdfInfo.website, socialsFontSize);
+    const websiteY = pageHeight - marginTop - socialsFontSize;
+    page.drawText(pdfInfo.website, {
+        x: websiteX, y: websiteY,
+        size: socialsFontSize, font: socialsFont, color: socialsTextColor,
+    })
+    const globe = await getImg(pdfDoc, pdfInfo.globePath);
+    const globeDims = globe.scale(1);
+    const globeX = websiteX - globeDims.width * 1.5;
+    const globeY = websiteY - (globeDims.height-socialsFontSize)/2;
+    putImage(page, globe, globeX, globeY, globeDims.width, globeDims.height, false);
+
+    const instaX = websiteX;
+    const instaY = websiteY - socialsFontSize*1.8;
+    page.drawText(pdfInfo.instagram, {
+        x: instaX, y: instaY,
+        size: socialsFontSize, font: socialsFont, color: socialsTextColor,
+    })
+    const instaLogo = await getImg(pdfDoc, pdfInfo.instaLogoPath);
+    const instaLogoDims = instaLogo.scale(1.1);
+    const instaLogoX = globeX;
+    const instaLogoY = instaY - (instaLogoDims.height-socialsFontSize)/2;
+    putImage(page, instaLogo, instaLogoX, instaLogoY, instaLogoDims.width, instaLogoDims.height, false);
+
+    // BODY
+
+    // SHIRT FRONT
+    const p1Dims = {
+        width: pageWidth / 2 - marginSide * 1.5,
+        height: (pageWidth / 2 - marginSide * 1.5) * 1.25,
+    }
+    // const p1Dims = p1.scale((pageWidth - marginSide * 3) / p1.size().width / 2);
+    const p1X = marginSide;
+    const p1Y = subtitleY - p1Dims.height - subtitleFontSize;
+    if (pdfInfo.shirtFrontImg != "") {
+        const p1 = await getImg(pdfDoc, pdfInfo.shirtFrontImg, true);
+        putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
+    } else if (!showPrintPreview)  {
+        putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
+    }
+
+    // BOTTOM TEXT
+    const mockupNumFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const mockupNum = "Mockup " + pdfInfo.mockupNum;
+    const mockupNumX = marginSide;
+    const mockupNumY = marginTop / 2;
+    const mockupNumFontSize = 18;
+    page.drawText(mockupNum, {
+        x: mockupNumX, y: mockupNumY,
+        size: mockupNumFontSize, font: mockupNumFont, color: titleColor,
+    })
+
+    const motoFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+    const motto = "INNOVATION IN INK";
+    const mottoFontSize = 22;
+    const mottoX = marginSide;
+    const mottoY = mockupNumY + mockupNumFontSize * 1.3;
+    page.drawText(motto, {
+        x: mottoX, y: mottoY,
+        size: mottoFontSize, font: motoFont, color: titleColor,
+    })
+    return pdfDoc
+}
 async function template1(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -422,14 +520,32 @@ async function template1(pdfDoc, page) {
     return pdfDoc
 }
 
+var currentPage = 1;
+var currentPageType = 1;
+var pageCount = 1;
+
+export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
+    currentPage = newCurrentPage;
+
+    if (newCurrentPageType == "template1") {
+        currentPageType = 1;
+    } else if (newCurrentPageType == "template2") {
+        currentPageType = 2;
+    } else {
+        console.error("invalid template type");
+    }
+}
+
 export async function createPdf() {
     var pdfDoc = await PDFDocument.create();
 
-    const page1 = pdfDoc.addPage([pageWidth, pageHeight]);
-    const page2 = pdfDoc.addPage([pageWidth, pageHeight]);
+    const page = pdfDoc.addPage([pageWidth, pageHeight]);
 
-    await template1(pdfDoc, page1);
-    await template1(pdfDoc, page2);
+    if (currentPageType == 1) {
+        await template1(pdfDoc, page);
+    } else if (currentPageType == 2) {
+        await template2(pdfDoc, page);
+    }
 
     const pdfBytes = await pdfDoc.save();
     return pdfBytes;
