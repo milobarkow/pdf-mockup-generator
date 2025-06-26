@@ -1,4 +1,5 @@
-import { createPdf, updatePdfInfo, updatePdfImageInfo, resetPdfInfo, getPdfInfo, togglePrintPreview, updateCurrentPage } from './mockup.mjs';
+import { createPdf, updatePdfInfo, resetPdfInfo, togglePrintPreview, updateCurrentPage, adjustFrontLogo } from "./mockup.mjs";
+import { pdfInfo } from "./state.mjs"
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
@@ -11,7 +12,6 @@ async function renderPdf(pdfData) {
         loadingTask = pdfjsLib.getDocument({ data: pdfData });
     }
 
-    // loadingTask.promise.then(async function(pdf) {
     var pdf = await loadingTask.promise;
 
     const pageViewports = [];
@@ -65,20 +65,14 @@ async function renderPdf(pdfData) {
 })();
 
 async function exportPdf(pdfBytes) {
-    console.log(pdfBytes);
-
-    var pdfInfo = await getPdfInfo();
-
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-    // Create a download link and trigger it
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = pdfInfo.pdfName;
     document.body.appendChild(link);
     link.click();
 
-    // Clean up
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
 
@@ -87,7 +81,7 @@ async function exportPdf(pdfBytes) {
 }
 
 document.getElementById("page-info-form").addEventListener("submit", async function(e) {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
 
     const form = e.target;
 
@@ -117,11 +111,15 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         console.log("updating PDF");
 
         const form = e.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
         const title = form.title.value;
         const subtitle = form.subtitle.value;
 
         const shirtFrontImageFile = document.getElementById("shirtFrontImage").files[0];
+        // const shirtFrontImageFile = data.shirtFrontImage;
+        console.log(shirtFrontImageFile);
         const c1Type = form.printTypeFront.value;
         const c1Dims = form.printDimsFront.value;
         const c1Loc = form.printLocFront.value;
@@ -174,22 +172,25 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         const id = e.submitter?.id;
         if (id == "shirtFrontImgClear") {
             document.getElementById("shirtFrontImage").value = "";
-            updatePdfImageInfo("", null, null, null);
+            pdfInfo.shirtFrontImg = "";
         } else if (id == "shirtBackImgClear") {
             document.getElementById("shirtBackImage").value = "";
-            updatePdfImageInfo(null, "", null, null);
+            pdfInfo.shirtBackImg = "";
         } else if (id == "shirtFrontLogoClear") {
             document.getElementById("frontLogoImage").value = "";
-            updatePdfImageInfo(null, null, "", null);
+            pdfInfo.frontLogoImg = "";
         } else if (id == "shirtBackLogoClear") {
             document.getElementById("backLogoImage").value = "";
-            updatePdfImageInfo(null, null, null, "");
+            pdfInfo.backLogoImg = "";
         }
         return;
     } else if (action === "togglePrintPreview") {
         console.log("toggling print preview (border boxes)");
         togglePrintPreview();
-    } 
+    } else if (action === "adjustFrontLogo") {
+        console.log("Adjusting Front Logo");
+        await adjustFrontLogo();
+    }
 
     var pdfBytes = await createPdf();
     renderPdf(pdfBytes);

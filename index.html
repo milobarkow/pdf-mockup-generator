@@ -37,87 +37,97 @@
             <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current Page</button>
         </form>
 
-        <form id="pdfForm">
-          <label class="main-label" for="title">Title</label>
-          <input id="title" title="title" type="text">
+            <form id="pdfForm">
+              <label class="main-label" for="title">Title</label>
+              <input name="title" id="title" title="title" type="text">
 
-          <label class="main-label" for="subtitle">SubTitle</label>
-          <input id="subtitle" subtitle="subtitle" type="text">
+              <label class="main-label" for="subtitle">SubTitle</label>
+              <input name="subtitle" id="subtitle" subtitle="subtitle" type="text">
 
-          <label class="main-label">Shirt Front</label>
-              <div class="image-input-group">
-                  <input type="file" id="shirtFrontImage" name="image" accept="image/png, image/jpeg" />
-                  <button type="submit" name="action" value="clearImg" id="shirtFrontImgClear">remove image</button>
-              </div>
-            
-              <label class="sub-label" for="printTypeFront">Print Type</label>
-              <input id="printTypeFront" subtitle="printTypeFront" type="text">
+              <label class="main-label">Shirt Front</label>
+                  <div class="image-input-group">
+                      <input type="file" id="shirtFrontImage" name="shirtFrontImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="shirtFrontImgClear">remove image</button>
+                  </div>
+                
+                  <label class="sub-label" for="printTypeFront">Print Type</label>
+                  <input name="printTypeFront" id="printTypeFront" subtitle="printTypeFront" type="text">
 
-              <label class="sub-label" for="printDimsFront">Dimensions</label>
-              <input id="printDimsFront" subtitle="printDimsFront" type="text">
+                  <label class="sub-label" for="printDimsFront">Dimensions</label>
+                  <input name="printDimsFront" id="printDimsFront" subtitle="printDimsFront" type="text">
 
-              <label class="sub-label" for="printLocFront">Print Location</label>
-              <input id="printLocFront" subtitle="printLocFront" type="text">
+                  <label class="sub-label" for="printLocFront">Print Location</label>
+                  <input name="printLocFront" id="printLocFront" subtitle="printLocFront" type="text">
 
-          <label class="main-label">Shirt Back</label>
-              <div class="image-input-group">
-                  <input type="file" id="shirtBackImage" name="image" accept="image/png, image/jpeg" />
-                  <button type="submit" name="action" value="clearImg" id="shirtBackImgClear">remove image</button>
-              </div>
+              <label class="main-label">Shirt Back</label>
+                  <div class="image-input-group">
+                      <input type="file" id="shirtBackImage" name="shirtBackImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="shirtBackImgClear">remove image</button>
+                  </div>
 
-              <label class="sub-label" for="printTypeBack">Print Type</label>
-              <input id="printTypeBack" subtitle="printTypeBack" type="text">
+                  <label class="sub-label" for="printTypeBack">Print Type</label>
+                  <input name="printTypeBack" id="printTypeBack" subtitle="printTypeBack" type="text">
 
-              <label class="sub-label" for="printDimsBack">Dimensions</label>
-              <input id="printDimsBack" subtitle="printDimsBack" type="text">
+                  <label class="sub-label" for="printDimsBack">Dimensions</label>
+                  <input name="printDimsBack" id="printDimsBack" subtitle="printDimsBack" type="text">
 
-              <label class="sub-label" for="printLocBack">Print Location</label>
-              <input id="printLocBack" subtitle="printLocBack" type="text">
+                  <label class="sub-label" for="printLocBack">Print Location</label>
+                  <input name="printLocBack" id="printLocBack" subtitle="printLocBack" type="text">
 
-          <label class="main-label">Front Logo</label>
-              <div class="image-input-group">
-                  <input type="file" id="frontLogoImage" name="image" accept="image/png, image/jpeg" />
-                  <button type="submit" name="action" value="clearImg" id="shirtFrontLogoClear">remove image</button>
-              </div>
-              <label class="sub-label">Colors</label>
-              <div class="container">
-                  <input class="color-input" type="text" id="fcolor1" name="color1" placeholder="#FF0000" pattern="^#?[0-9A-Fa-f]{6}$" />
-                  <input class="color-input" type="text" id="fcolor2" name="color2" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="fcolor3" name="color3" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="fcolor4" name="color4" pattern="^#?[0-9A-Fa-f]{6}$"/>
-              </div>
-              <div class="container">
-                  <input class="color-input" type="text" id="fcolor5" name="color5" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="fcolor6" name="color6" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="fcolor7" name="color7" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="fcolor8" name="color8" pattern="^#?[0-9A-Fa-f]{6}$"/>
-              </div>
+              <label class="main-label">Front Logo</label>
+                  <div class="image-input-group">
+                      <input type="file" id="frontLogoImage" name="frontLogoImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="shirtFrontLogoClear">remove image</button>
+                  </div>
+                  <label class="sub-label">Colors</label>
+                  <div class="color-container">
+                      <input class="color-input" type="text" id="fcolor1" name="color1" placeholder="#FF0000" pattern="^#?[0-9A-Fa-f]{6}$" />
+                      <input class="color-input" type="text" id="fcolor2" name="color2" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="fcolor3" name="color3" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="fcolor4" name="color4" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                  </div>
+                  <div class="color-container">
+                      <input class="color-input" type="text" id="fcolor5" name="color5" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="fcolor6" name="color6" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="fcolor7" name="color7" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="fcolor8" name="color8" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                  </div>
 
-          <label class="main-label">Back Logo</label>
-              <div class="image-input-group">
-                  <input type="file" id="backLogoImage" name="image" accept="image/png, image/jpeg" />
-                  <button type="submit" name="action" value="clearImg" id="shirtBackLogoClear">remove image</button>
-              </div>
-              <label class="sub-label">Colors</label>
-              <div class="container">
-                  <input class="color-input" type="text" id="bcolor1" name="color1" placeholder="#FF0000" pattern="^#?[0-9A-Fa-f]{6}$" />
-                  <input class="color-input" type="text" id="bcolor2" name="color2" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="bcolor3" name="color3" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="bcolor4" name="color4" pattern="^#?[0-9A-Fa-f]{6}$"/>
-              </div>
-              <div class="container">
-                  <input class="color-input" type="text" id="bcolor5" name="color5" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="bcolor6" name="color6" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="bcolor7" name="color7" pattern="^#?[0-9A-Fa-f]{6}$"/>
-                  <input class="color-input" type="text" id="bcolor8" name="color8" pattern="^#?[0-9A-Fa-f]{6}$"/>
-              </div>
+              <label class="main-label">Back Logo</label>
+                  <div class="image-input-group">
+                      <input type="file" id="backLogoImage" name="backLogoImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="shirtBackLogoClear">remove image</button>
+                  </div>
+                  <label class="sub-label">Colors</label>
+                  <div class="color-container">
+                      <input class="color-input" type="text" id="bcolor1" name="color1" placeholder="#FF0000" pattern="^#?[0-9A-Fa-f]{6}$" />
+                      <input class="color-input" type="text" id="bcolor2" name="color2" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="bcolor3" name="color3" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="bcolor4" name="color4" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                  </div>
+                  <div class="color-container">
+                      <input class="color-input" type="text" id="bcolor5" name="color5" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="bcolor6" name="color6" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="bcolor7" name="color7" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                      <input class="color-input" type="text" id="bcolor8" name="color8" pattern="^#?[0-9A-Fa-f]{6}$"/>
+                  </div>
 
-          <label class="main-label" for="mockupNum">Mockup Number</label>
-              <input id="mockupNum" title="mockupNum" type="text">
+              <label class="main-label" for="mockupNum">Mockup Number</label>
+                  <input id="mockupNum" name="mockupNum" title="mockupNum" type="text">
 
-          <label class="main-label" for="pdfName">PDF Output File Name</label>
-              <input id="pdfName" title="pdfName" type="text">
-        </form>
+              <label class="main-label" for="pdfName">PDF Output File Name</label>
+                  <input id="pdfName" name="pdfName" title="pdfName" type="text">
+            </form>
+
+
+        <!-- <div id="form2-container" style="display: none;"> -->
+        <!--     <form id="pdfForm2"> -->
+        <!--       <label class="main-label" for="title">Title</label> -->
+        <!--       <input id="title" title="title" type="text"> -->
+
+        <!--       <label class="main-label" for="subtitle">SubTitle</label> -->
+        <!--       <input id="subtitle" subtitle="subtitle" type="text"> -->
+        <!-- </div> -->
     </div>
 
     <div class="container-item" id="form-buttons">
@@ -126,6 +136,7 @@
         <button form="pdfForm" type="submit" name="action" value="exportPdf">Export Pdf</button>
         <button form="pdfForm" type="submit" name="action" value="clearForm">Clear Form</button>
         <button form="pdfForm" type="submit" name="action" value="togglePrintPreview">Toggle Print Preview</button>
+        <button form="pdfForm" type="submit" name="action" value="adjustFrontLogo">Adjust Front Logo</button>
     </div>
   </div>
 

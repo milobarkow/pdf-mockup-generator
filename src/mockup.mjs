@@ -1,9 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-
-const pageWidth = 720;
-const pageHeight = 1080;
-const marginTop = 25;
-const marginSide = 35;
+import * as s from "./state.mjs";
 
 async function getImg(pdfDoc, img, fromUpload = false) {
     var imgBytes, imgType;
@@ -49,7 +45,7 @@ function putImage(page, img, imgX, imgY, imgWidth, imgHeight, showBorder = false
     }
 }
 
-function putImageBorder(page, borderX, borderY, borderWidth, borderHeight , placeHolderText = null, placeHolderFont = null) {
+function putImageBorder(page, borderX, borderY, borderWidth, borderHeight, placeHolderText = null, placeHolderFont = null) {
     page.drawRectangle({
         x: borderX, y: borderY,
         width: borderWidth, height: borderHeight,
@@ -60,8 +56,8 @@ function putImageBorder(page, borderX, borderY, borderWidth, borderHeight , plac
     if (placeHolderText && placeHolderFont) {
         const placeHolderFontSize = 28;
         const placeHolderColor = hexToRgb('#000000');
-        const placeHolderX = borderX + borderWidth/2 - placeHolderFont.widthOfTextAtSize(placeHolderText, placeHolderFontSize) / 2;
-        const placeHolderY = borderY + borderHeight/2 - placeHolderFontSize/2;
+        const placeHolderX = borderX + borderWidth / 2 - placeHolderFont.widthOfTextAtSize(placeHolderText, placeHolderFontSize) / 2;
+        const placeHolderY = borderY + borderHeight / 2 - placeHolderFontSize / 2;
         page.drawText(placeHolderText, {
             x: placeHolderX, y: placeHolderY,
             size: placeHolderFontSize, font: placeHolderFont, color: placeHolderColor,
@@ -133,49 +129,16 @@ function getCaptionString(capObj) {
     return caption;
 }
 
-var pdfPages = [];
-
-var pdfInfo = {
-    title: "Title",
-    subtitle: "Subtitle",
-    logoPath: "/pdf-mockup-generator/logo.png",
-    globePath: "/pdf-mockup-generator/globe.png",
-    instaLogoPath: "/pdf-mockup-generator/insta.png",
-    website: "www.jointprinting.com",
-    instagram: "@jointprinting",
-    shirtFrontImg: "",
-    shirtBackImg: "",
-    frontLogoImg: "",
-    backLogoImg: "",
-    frontLogoColors: ["FF0000", "00FF00", "0000FF", ],
-    backLogoColors: ["FFFFFF", "000000"],
-    c1: {
-        type: "",
-        dims: "",
-        loc: ""
-    },
-    c2: {
-        type: "",
-        dims: "",
-        loc: ""
-    },
-    mockupNum: "#0000000",
-    pdfName: "mockup.pdf",
-};
-
-const defaultPdfInfo = JSON.parse(JSON.stringify(pdfInfo));
-
-var showPrintPreview = false;
 export async function togglePrintPreview() {
-    showPrintPreview = !showPrintPreview ;
+    s.showPrintPreview = !s.showPrintPreview;
 }
 
-export async function updatePdfImageInfo(shirtFrontImageFile, shirtBackImageFile, frontLogoImageFile, backLogoImageFile) {
-    if (shirtFrontImageFile != null) pdfInfo.shirtFrontImg = shirtFrontImageFile;
-    if (shirtBackImageFile != null) pdfInfo.shirtBackImg = shirtBackImageFile;
-    if (frontLogoImageFile != null) pdfInfo.frontLogoImg = frontLogoImageFile;
-    if (backLogoImageFile != null) pdfInfo.backLogoImg = backLogoImageFile;
-}
+// export async function updatePdfImageInfo(shirtFrontImageFile, shirtBackImageFile, frontLogoImageFile, backLogoImageFile) {
+//     if (shirtFrontImageFile != null) s.pdfInfo.shirtFrontImg = shirtFrontImageFile;
+//     if (shirtBackImageFile != null) s.pdfInfo.shirtBackImg = shirtBackImageFile;
+//     if (frontLogoImageFile != null) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+//     if (backLogoImageFile != null) s.pdfInfo.backLogoImg = backLogoImageFile;
+// }
 
 export async function updatePdfInfo(title, subtitle,
     shirtFrontImageFile, c1Type, c1Dims, c1Loc,
@@ -183,40 +146,38 @@ export async function updatePdfInfo(title, subtitle,
     frontLogoImageFile, frontLogoColors,
     backLogoImageFile, backLogoColors,
     mockupNum, pdfName) {
-    if (title) pdfInfo.title = title;
-    if (subtitle) pdfInfo.subtitle = subtitle;
 
-    if (shirtFrontImageFile) pdfInfo.shirtFrontImg = shirtFrontImageFile;
-    if (c1Type) pdfInfo.c1.type = c1Type;
-    if (c1Dims) pdfInfo.c1.dims = c1Dims;
-    if (c1Loc) pdfInfo.c1.loc = c1Loc;
 
-    if (shirtBackImageFile) pdfInfo.shirtBackImg = shirtBackImageFile;
-    if (c2Type) pdfInfo.c2.type = c2Type;
-    if (c2Dims) pdfInfo.c2.dims = c2Dims;
-    if (c2Loc) pdfInfo.c2.loc = c2Loc;
+    if (title) s.pdfInfo.title = title;
+    if (subtitle) s.pdfInfo.subtitle = subtitle;
 
-    if (frontLogoImageFile) pdfInfo.frontLogoImg = frontLogoImageFile;
-    if (frontLogoColors) pdfInfo.frontLogoColors = frontLogoColors;
+    if (shirtFrontImageFile) s.pdfInfo.shirtFrontImg = shirtFrontImageFile;
+    if (c1Type) s.pdfInfo.c1.type = c1Type;
+    if (c1Dims) s.pdfInfo.c1.dims = c1Dims;
+    if (c1Loc) s.pdfInfo.c1.loc = c1Loc;
 
-    if (backLogoImageFile) pdfInfo.backLogoImg = backLogoImageFile;
-    if (backLogoColors) pdfInfo.backLogoColors = backLogoColors;
+    if (shirtBackImageFile) s.pdfInfo.shirtBackImg = shirtBackImageFile;
+    if (c2Type) s.pdfInfo.c2.type = c2Type;
+    if (c2Dims) s.pdfInfo.c2.dims = c2Dims;
+    if (c2Loc) s.pdfInfo.c2.loc = c2Loc;
 
-    if (mockupNum) pdfInfo.mockupNum = mockupNum;
+    if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+    if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
+
+    if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
+    if (backLogoColors) s.pdfInfo.backLogoColors = backLogoColors;
+
+    if (mockupNum) s.pdfInfo.mockupNum = mockupNum;
 
     if (pdfName) {
-        pdfInfo.pdfName = pdfName;
+        s.pdfInfo.pdfName = pdfName;
     } else {
-        pdfInfo.pdfName = defaultPdfInfo.pdfName;
+        s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
     }
 }
 
-export async function getPdfInfo() {
-    return pdfInfo;
-}
-
 export async function resetPdfInfo() {
-    Object.assign(pdfInfo, defaultPdfInfo);
+    Object.assign(s.pdfInfo, s.defaultPdfInfo);
 }
 
 async function template2(pdfDoc, page) {
@@ -226,24 +187,24 @@ async function template2(pdfDoc, page) {
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER
-    const logo = await getImg(pdfDoc, pdfInfo.logoPath);
+    const logo = await getImg(pdfDoc, s.pdfInfo.logoPath);
     const logoDims = logo.scale(0.70);
-    const logoX = marginSide;
-    const logoY = pageHeight - logoDims.height - marginTop;
+    const logoX = s.marginSide;
+    const logoY = s.pageHeight - logoDims.height - s.marginTop;
     putImage(page, logo, logoX, logoY, logoDims.width, logoDims.height, false);
 
     // TITTLE
     const titleFontSize = 28;
     const subtitleFontSize = 20;
     const titleColor = hexToRgb('#4d4e4e');
-    const titleX = marginSide;
-    const titleY = pageHeight - logoDims.height - marginTop - titleFontSize * 1.3;
+    const titleX = s.marginSide;
+    const titleY = s.pageHeight - logoDims.height - s.marginTop - titleFontSize * 1.3;
     const subtitleY = titleY - titleFontSize;
-    page.drawText(pdfInfo.title, {
+    page.drawText(s.pdfInfo.title, {
         x: titleX, y: titleY,
         size: titleFontSize, font: titleFont, color: titleColor,
     })
-    page.drawText(pdfInfo.subtitle, {
+    page.drawText(s.pdfInfo.subtitle, {
         x: titleX, y: subtitleY,
         size: subtitleFontSize, font: titleFont, color: titleColor,
     })
@@ -252,69 +213,31 @@ async function template2(pdfDoc, page) {
     const socialsFontSize = 16;
     const socialsTextColor = hexToRgb('#000000');
 
-    const websiteX = pageWidth - marginSide - socialsFont.widthOfTextAtSize(pdfInfo.website, socialsFontSize);
-    const websiteY = pageHeight - marginTop - socialsFontSize;
-    page.drawText(pdfInfo.website, {
+    const websiteX = s.pageWidth - s.marginSide - socialsFont.widthOfTextAtSize(s.pdfInfo.website, socialsFontSize);
+    const websiteY = s.pageHeight - s.marginTop - socialsFontSize;
+    page.drawText(s.pdfInfo.website, {
         x: websiteX, y: websiteY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const globe = await getImg(pdfDoc, pdfInfo.globePath);
+    const globe = await getImg(pdfDoc, s.pdfInfo.globePath);
     const globeDims = globe.scale(1);
     const globeX = websiteX - globeDims.width * 1.5;
-    const globeY = websiteY - (globeDims.height-socialsFontSize)/2;
+    const globeY = websiteY - (globeDims.height - socialsFontSize) / 2;
     putImage(page, globe, globeX, globeY, globeDims.width, globeDims.height, false);
 
     const instaX = websiteX;
-    const instaY = websiteY - socialsFontSize*1.8;
-    page.drawText(pdfInfo.instagram, {
+    const instaY = websiteY - socialsFontSize * 1.8;
+    page.drawText(s.pdfInfo.instagram, {
         x: instaX, y: instaY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const instaLogo = await getImg(pdfDoc, pdfInfo.instaLogoPath);
+    const instaLogo = await getImg(pdfDoc, s.pdfInfo.instaLogoPath);
     const instaLogoDims = instaLogo.scale(1.1);
     const instaLogoX = globeX;
-    const instaLogoY = instaY - (instaLogoDims.height-socialsFontSize)/2;
+    const instaLogoY = instaY - (instaLogoDims.height - socialsFontSize) / 2;
     putImage(page, instaLogo, instaLogoX, instaLogoY, instaLogoDims.width, instaLogoDims.height, false);
-
-    // BODY
-
-    // SHIRT FRONT
-    const p1Dims = {
-        width: pageWidth / 2 - marginSide * 1.5,
-        height: (pageWidth / 2 - marginSide * 1.5) * 1.25,
-    }
-    // const p1Dims = p1.scale((pageWidth - marginSide * 3) / p1.size().width / 2);
-    const p1X = marginSide;
-    const p1Y = subtitleY - p1Dims.height - subtitleFontSize;
-    if (pdfInfo.shirtFrontImg != "") {
-        const p1 = await getImg(pdfDoc, pdfInfo.shirtFrontImg, true);
-        putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
-    } else if (!showPrintPreview)  {
-        putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
-    }
-
-    // BOTTOM TEXT
-    const mockupNumFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
-    const mockupNum = "Mockup " + pdfInfo.mockupNum;
-    const mockupNumX = marginSide;
-    const mockupNumY = marginTop / 2;
-    const mockupNumFontSize = 18;
-    page.drawText(mockupNum, {
-        x: mockupNumX, y: mockupNumY,
-        size: mockupNumFontSize, font: mockupNumFont, color: titleColor,
-    })
-
-    const motoFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const motto = "INNOVATION IN INK";
-    const mottoFontSize = 22;
-    const mottoX = marginSide;
-    const mottoY = mockupNumY + mockupNumFontSize * 1.3;
-    page.drawText(motto, {
-        x: mottoX, y: mottoY,
-        size: mottoFontSize, font: motoFont, color: titleColor,
-    })
-    return pdfDoc
 }
+
 async function template1(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -322,24 +245,24 @@ async function template1(pdfDoc, page) {
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER
-    const logo = await getImg(pdfDoc, pdfInfo.logoPath);
+    const logo = await getImg(pdfDoc, s.pdfInfo.logoPath);
     const logoDims = logo.scale(0.70);
-    const logoX = marginSide;
-    const logoY = pageHeight - logoDims.height - marginTop;
+    const logoX = s.marginSide;
+    const logoY = s.pageHeight - logoDims.height - s.marginTop;
     putImage(page, logo, logoX, logoY, logoDims.width, logoDims.height, false);
 
     // TITTLE
     const titleFontSize = 28;
     const subtitleFontSize = 20;
     const titleColor = hexToRgb('#4d4e4e');
-    const titleX = marginSide;
-    const titleY = pageHeight - logoDims.height - marginTop - titleFontSize * 1.3;
+    const titleX = s.marginSide;
+    const titleY = s.pageHeight - logoDims.height - s.marginTop - titleFontSize * 1.3;
     const subtitleY = titleY - titleFontSize;
-    page.drawText(pdfInfo.title, {
+    page.drawText(s.pdfInfo.title, {
         x: titleX, y: titleY,
         size: titleFontSize, font: titleFont, color: titleColor,
     })
-    page.drawText(pdfInfo.subtitle, {
+    page.drawText(s.pdfInfo.subtitle, {
         x: titleX, y: subtitleY,
         size: subtitleFontSize, font: titleFont, color: titleColor,
     })
@@ -348,58 +271,59 @@ async function template1(pdfDoc, page) {
     const socialsFontSize = 16;
     const socialsTextColor = hexToRgb('#000000');
 
-    const websiteX = pageWidth - marginSide - socialsFont.widthOfTextAtSize(pdfInfo.website, socialsFontSize);
-    const websiteY = pageHeight - marginTop - socialsFontSize;
-    page.drawText(pdfInfo.website, {
+    const websiteX = s.pageWidth - s.marginSide - socialsFont.widthOfTextAtSize(s.pdfInfo.website, socialsFontSize);
+    const websiteY = s.pageHeight - s.marginTop - socialsFontSize;
+    page.drawText(s.pdfInfo.website, {
         x: websiteX, y: websiteY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const globe = await getImg(pdfDoc, pdfInfo.globePath);
+    const globe = await getImg(pdfDoc, s.pdfInfo.globePath);
     const globeDims = globe.scale(1);
     const globeX = websiteX - globeDims.width * 1.5;
-    const globeY = websiteY - (globeDims.height-socialsFontSize)/2;
+    const globeY = websiteY - (globeDims.height - socialsFontSize) / 2;
     putImage(page, globe, globeX, globeY, globeDims.width, globeDims.height, false);
 
     const instaX = websiteX;
-    const instaY = websiteY - socialsFontSize*1.8;
-    page.drawText(pdfInfo.instagram, {
+    const instaY = websiteY - socialsFontSize * 1.8;
+    page.drawText(s.pdfInfo.instagram, {
         x: instaX, y: instaY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const instaLogo = await getImg(pdfDoc, pdfInfo.instaLogoPath);
+    const instaLogo = await getImg(pdfDoc, s.pdfInfo.instaLogoPath);
     const instaLogoDims = instaLogo.scale(1.1);
     const instaLogoX = globeX;
-    const instaLogoY = instaY - (instaLogoDims.height-socialsFontSize)/2;
+    const instaLogoY = instaY - (instaLogoDims.height - socialsFontSize) / 2;
     putImage(page, instaLogo, instaLogoX, instaLogoY, instaLogoDims.width, instaLogoDims.height, false);
 
     // BODY
 
     // SHIRT FRONT
     const p1Dims = {
-        width: pageWidth / 2 - marginSide * 1.5,
-        height: (pageWidth / 2 - marginSide * 1.5) * 1.25,
+        width: s.pageWidth / 2 - s.marginSide * 1.5,
+        height: (s.pageWidth / 2 - s.marginSide * 1.5) * 1.25,
     }
-    // const p1Dims = p1.scale((pageWidth - marginSide * 3) / p1.size().width / 2);
-    const p1X = marginSide;
+    // const p1Dims = p1.scale((s.pageWidth - s.marginSide * 3) / p1.size().width / 2);
+    const p1X = s.marginSide;
     const p1Y = subtitleY - p1Dims.height - subtitleFontSize;
-    if (pdfInfo.shirtFrontImg != "") {
-        const p1 = await getImg(pdfDoc, pdfInfo.shirtFrontImg, true);
+    console.log(s.pdfInfo.shirtFrontImg.name);
+    if (s.pdfInfo.shirtFrontImg != "") {
+        const p1 = await getImg(pdfDoc, s.pdfInfo.shirtFrontImg, true);
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
-    } else if (!showPrintPreview)  {
+    } else if (!s.showPrintPreview) {
         putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
     }
 
     // SHIRT BACK
     const p2Dims = {
-        width: pageWidth / 2 - marginSide * 1.5,
-        height: (pageWidth / 2 - marginSide * 1.5) * 1.25,
+        width: s.pageWidth / 2 - s.marginSide * 1.5,
+        height: (s.pageWidth / 2 - s.marginSide * 1.5) * 1.25,
     }
-    const p2X = pageWidth - marginSide - p2Dims.width;
+    const p2X = s.pageWidth - s.marginSide - p2Dims.width;
     const p2Y = subtitleY - p2Dims.height - subtitleFontSize;
-    if (pdfInfo.shirtBackImg != "") {
-        const p2 = await getImg(pdfDoc, pdfInfo.shirtBackImg, true);
+    if (s.pdfInfo.shirtBackImg != "") {
+        const p2 = await getImg(pdfDoc, s.pdfInfo.shirtBackImg, true);
         putImage(page, p2, p2X, p2Y, p2Dims.width, p2Dims.height, false);
-    } else if (!showPrintPreview)  {
+    } else if (!s.showPrintPreview) {
         putImageBorder(page, p2X, p2Y, p2Dims.width, p2Dims.height, "SHIRT BACK", placeHolderFont);
     }
 
@@ -411,7 +335,7 @@ async function template1(pdfDoc, page) {
 
     const c1X = p1X;
     const c1Y = p1Y - captionLineHeight;
-    const c1 = getCaptionString(pdfInfo.c1);
+    const c1 = getCaptionString(s.pdfInfo.c1);
     page.drawText(c1.join("\n"), {
         x: c1X,
         y: c1Y,
@@ -431,7 +355,7 @@ async function template1(pdfDoc, page) {
     // SHIRT BACK CAPTION
     const c2X = p2X;
     const c2Y = p2Y - captionLineHeight;
-    const c2 = getCaptionString(pdfInfo.c2);
+    const c2 = getCaptionString(s.pdfInfo.c2);
     page.drawText(c2.join("\n"), {
         x: c2X,
         y: c2Y,
@@ -450,46 +374,46 @@ async function template1(pdfDoc, page) {
 
     // SHIRT FRONT LOGO
     const frontLogoDims = {
-        width: pageWidth / 2 - marginSide * 2,
-        height: pageWidth / 2 - marginSide * 2,
+        width: s.pageWidth / 2 - s.marginSide * 2,
+        height: s.pageWidth / 2 - s.marginSide * 2,
     }
-    const frontLogoX = marginSide;
+    const frontLogoX = s.marginSide;
     const frontLogoY = Math.min(c1TextBottomY, c2TextBottomY) - frontLogoDims.height - captionLineHeight / 2;
-    if (pdfInfo.frontLogoImg != "") {
-        const frontLogo = await getImg(pdfDoc, pdfInfo.frontLogoImg, true);
+    if (s.pdfInfo.frontLogoImg != "") {
+        const frontLogo = await getImg(pdfDoc, s.pdfInfo.frontLogoImg, true);
         putImage(page, frontLogo, frontLogoX, frontLogoY, frontLogoDims.width, frontLogoDims.height, false);
-    } else if (!showPrintPreview)  {
+    } else if (!s.showPrintPreview) {
         putImageBorder(page, frontLogoX, frontLogoY, frontLogoDims.width, frontLogoDims.height, "LOGO FRONT", placeHolderFont);
     }
 
     // SHIRT BACK LOGO
     const backLogoDims = {
-        width: pageWidth / 2 - marginSide * 2,
-        height: pageWidth / 2 - marginSide * 2,
+        width: s.pageWidth / 2 - s.marginSide * 2,
+        height: s.pageWidth / 2 - s.marginSide * 2,
     }
     const backLogoX = p2X;
     const backLogoY = Math.min(c1TextBottomY, c2TextBottomY) - backLogoDims.height - captionLineHeight / 2;
-    if (pdfInfo.backLogoImg != "") {
-        const backLogo = await getImg(pdfDoc, pdfInfo.backLogoImg, true);
+    if (s.pdfInfo.backLogoImg != "") {
+        const backLogo = await getImg(pdfDoc, s.pdfInfo.backLogoImg, true);
         putImage(page, backLogo, backLogoX, backLogoY, backLogoDims.width, backLogoDims.height, false);
-    } else if (!showPrintPreview)  {
+    } else if (!s.showPrintPreview) {
         putImageBorder(page, backLogoX, backLogoY, backLogoDims.width, backLogoDims.height, "LOGO BACK", placeHolderFont);
     }
 
     // COLOR CIRCLES
-    const frontLogoColors = pdfInfo.frontLogoColors
+    const frontLogoColors = s.pdfInfo.frontLogoColors
         .filter(color => color.trim() !== "") // remove empty strings
         .map(color => color.replace(/^#/, "")); // remove leading #
     const circleSize = 26; // radius
 
     //  FRONT LOGO COLORS
-    let frontLogoColorX = marginSide + circleSize;
+    let frontLogoColorX = s.marginSide + circleSize;
     let frontLogoColorY = frontLogoY - circleSize * 1.3;
-    let frontLogoMaxWidth = marginSide + frontLogoDims.width;
+    let frontLogoMaxWidth = s.marginSide + frontLogoDims.width;
     drawCircles(page, frontLogoColorX, frontLogoColorY, frontLogoColors, circleSize, captionFont, frontLogoMaxWidth);
 
     //  BACK LOGO COLORS
-    const backLogoColors = pdfInfo.backLogoColors
+    const backLogoColors = s.pdfInfo.backLogoColors
         .filter(color => color.trim() !== "") // remove empty strings
         .map(color => color.replace(/^#/, "")); // remove leading #
     let backLogoColorX = p2X + circleSize;
@@ -499,9 +423,9 @@ async function template1(pdfDoc, page) {
 
     // BOTTOM TEXT
     const mockupNumFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
-    const mockupNum = "Mockup " + pdfInfo.mockupNum;
-    const mockupNumX = marginSide;
-    const mockupNumY = marginTop / 2;
+    const mockupNum = "Mockup " + s.pdfInfo.mockupNum;
+    const mockupNumX = s.marginSide;
+    const mockupNumY = s.marginTop / 2;
     const mockupNumFontSize = 18;
     page.drawText(mockupNum, {
         x: mockupNumX, y: mockupNumY,
@@ -511,7 +435,7 @@ async function template1(pdfDoc, page) {
     const motoFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
     const motto = "INNOVATION IN INK";
     const mottoFontSize = 22;
-    const mottoX = marginSide;
+    const mottoX = s.marginSide;
     const mottoY = mockupNumY + mockupNumFontSize * 1.3;
     page.drawText(motto, {
         x: mottoX, y: mottoY,
@@ -520,30 +444,55 @@ async function template1(pdfDoc, page) {
     return pdfDoc
 }
 
-var currentPage = 1;
-var currentPageType = 1;
-var pageCount = 1;
-
 export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
-    currentPage = newCurrentPage;
+    s.currentPage = newCurrentPage;
+
+    const form1Container = document.getElementById("form1-container");
+    const form2Container = document.getElementById("form2-container");
 
     if (newCurrentPageType == "template1") {
-        currentPageType = 1;
+        s.currentPageType = 1;
+        form1Container.style.display = "block";
+        form2Container.style.display = "none"
     } else if (newCurrentPageType == "template2") {
-        currentPageType = 2;
+        s.currentPageType = 2;
+        form1Container.style.display = "none";
+        form2Container.style.display = "block"
     } else {
         console.error("invalid template type");
     }
 }
 
+
+export async function adjustFrontLogo() {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+
+    const width = Math.floor(screenWidth * 0.5);
+    const height = Math.floor(screenHeight * 0.5);
+
+    const left = Math.floor((screenWidth - width) / 2);
+    const top = Math.floor((screenHeight - height) / 2);
+
+    const shirtUrl = "/pdf-mockup-generator/shirt.jpg";
+    const logoUrl = "/pdf-mockup-generator/fry.png";
+
+    window.open(
+        `popup.html?shirt=${encodeURIComponent(shirtUrl)}&logo=${encodeURIComponent(logoUrl)}`,
+        "PopupWindow",
+        `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
+    );
+    return 1;
+}
+
 export async function createPdf() {
     var pdfDoc = await PDFDocument.create();
 
-    const page = pdfDoc.addPage([pageWidth, pageHeight]);
+    const page = pdfDoc.addPage([s.pageWidth, s.pageHeight]);
 
-    if (currentPageType == 1) {
+    if (s.currentPageType == 1) {
         await template1(pdfDoc, page);
-    } else if (currentPageType == 2) {
+    } else if (s.currentPageType == 2) {
         await template2(pdfDoc, page);
     }
 
