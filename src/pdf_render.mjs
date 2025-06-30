@@ -109,59 +109,8 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
 
     if (action === "updatePdf") {
         console.log("updating PDF");
-
         const form = e.target;
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        const title = form.title.value;
-        const subtitle = form.subtitle.value;
-
-        const shirtFrontImageFile = document.getElementById("shirtFrontImage").files[0];
-        // const shirtFrontImageFile = data.shirtFrontImage;
-        console.log(shirtFrontImageFile);
-        const c1Type = form.printTypeFront.value;
-        const c1Dims = form.printDimsFront.value;
-        const c1Loc = form.printLocFront.value;
-
-        const shirtBackImageFile = document.getElementById("shirtBackImage").files[0];
-        const c2Type = form.printTypeBack.value;
-        const c2Dims = form.printDimsBack.value;
-        const c2Loc = form.printLocBack.value;
-
-        const frontLogoImageFile = document.getElementById("frontLogoImage").files[0];
-        const fcolor1 = form.fcolor1.value;
-        const fcolor2 = form.fcolor2.value;
-        const fcolor3 = form.fcolor3.value;
-        const fcolor4 = form.fcolor4.value;
-        const fcolor5 = form.fcolor5.value;
-        const fcolor6 = form.fcolor6.value;
-        const fcolor7 = form.fcolor7.value;
-        const fcolor8 = form.fcolor8.value;
-        const frontLogoColors = [fcolor1, fcolor2, fcolor3, fcolor4, fcolor5, fcolor6, fcolor7, fcolor8]
-
-        const backLogoImageFile = document.getElementById("backLogoImage").files[0];
-        const bcolor1 = form.bcolor1.value;
-        const bcolor2 = form.bcolor2.value;
-        const bcolor3 = form.bcolor3.value;
-        const bcolor4 = form.bcolor4.value;
-        const bcolor5 = form.bcolor5.value;
-        const bcolor6 = form.bcolor6.value;
-        const bcolor7 = form.bcolor7.value;
-        const bcolor8 = form.bcolor8.value;
-        const backLogoColors = [bcolor1, bcolor2, bcolor3, bcolor4, bcolor5, bcolor6, bcolor7, bcolor8]
-
-        const mockupNum = form.mockupNum.value;
-
-        const pdfName = form.pdfName.value;
-
-        console.log("updating PDF info");
-        updatePdfInfo(title, subtitle,
-            shirtFrontImageFile, c1Type, c1Dims, c1Loc,
-            shirtBackImageFile, c2Type, c2Dims, c2Loc,
-            frontLogoImageFile, frontLogoColors,
-            backLogoImageFile, backLogoColors,
-            mockupNum, pdfName);
+        updatePdfInfo(form);
     } else if (action === "resetInfo") {
         console.log("restoring default PDF info");
         resetPdfInfo();

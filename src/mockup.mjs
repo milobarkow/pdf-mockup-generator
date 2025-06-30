@@ -133,44 +133,40 @@ export async function togglePrintPreview() {
     s.showPrintPreview = !s.showPrintPreview;
 }
 
-// export async function updatePdfImageInfo(shirtFrontImageFile, shirtBackImageFile, frontLogoImageFile, backLogoImageFile) {
-//     if (shirtFrontImageFile != null) s.pdfInfo.shirtFrontImg = shirtFrontImageFile;
-//     if (shirtBackImageFile != null) s.pdfInfo.shirtBackImg = shirtBackImageFile;
-//     if (frontLogoImageFile != null) s.pdfInfo.frontLogoImg = frontLogoImageFile;
-//     if (backLogoImageFile != null) s.pdfInfo.backLogoImg = backLogoImageFile;
-// }
+export async function updatePdfInfo(form) {
+    if (form.title.value) s.pdfInfo.title = form.title.value;
+    if (form.subtitle.value) s.pdfInfo.subtitle = form.subtitle.value;
 
-export async function updatePdfInfo(title, subtitle,
-    shirtFrontImageFile, c1Type, c1Dims, c1Loc,
-    shirtBackImageFile, c2Type, c2Dims, c2Loc,
-    frontLogoImageFile, frontLogoColors,
-    backLogoImageFile, backLogoColors,
-    mockupNum, pdfName) {
-
-
-    if (title) s.pdfInfo.title = title;
-    if (subtitle) s.pdfInfo.subtitle = subtitle;
-
+    const shirtFrontImageFile = document.getElementById("shirtFrontImage").files[0];
     if (shirtFrontImageFile) s.pdfInfo.shirtFrontImg = shirtFrontImageFile;
-    if (c1Type) s.pdfInfo.c1.type = c1Type;
-    if (c1Dims) s.pdfInfo.c1.dims = c1Dims;
-    if (c1Loc) s.pdfInfo.c1.loc = c1Loc;
+    if (form.c1Type) s.pdfInfo.c1.type = form.c1Type.value;
+    if (form.c1Dims) s.pdfInfo.c1.dims = form.c1Dims.value;
+    if (form.c1Loc) s.pdfInfo.c1.loc = form.c1Loc.value;
 
+    const shirtBackImageFile = document.getElementById("shirtBackImage").files[0];
     if (shirtBackImageFile) s.pdfInfo.shirtBackImg = shirtBackImageFile;
-    if (c2Type) s.pdfInfo.c2.type = c2Type;
-    if (c2Dims) s.pdfInfo.c2.dims = c2Dims;
-    if (c2Loc) s.pdfInfo.c2.loc = c2Loc;
+    if (form.c2Type) s.pdfInfo.c2.type = form.c2Type.value;
+    if (form.c2Dims) s.pdfInfo.c2.dims = form.c2Dims.value;
+    if (form.c2Loc) s.pdfInfo.c2.loc = form.c2Loc.value;
 
+    const frontLogoImageFile = document.getElementById("frontLogoImage").files[0];
     if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+    const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
+        form[`fcolor${i + 1}`]?.value || ""
+    );
     if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
 
+    const backLogoImageFile = document.getElementById("backLogoImage").files[0];
     if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
+    const backLogoColors = Array.from({ length: 8 }, (_, i) =>
+        form[`bcolor${i + 1}`]?.value || ""
+    );
     if (backLogoColors) s.pdfInfo.backLogoColors = backLogoColors;
 
-    if (mockupNum) s.pdfInfo.mockupNum = mockupNum;
+    if (form.mockupNum.value) s.pdfInfo.mockupNum = form.mockupNum.value;
 
-    if (pdfName) {
-        s.pdfInfo.pdfName = pdfName;
+    if (form.pdfname) {
+        s.pdfInfo.pdfName = form.pdfname.value;
     } else {
         s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
     }
@@ -469,7 +465,7 @@ export async function adjustFrontLogo() {
     const screenHeight = window.screen.height;
 
     const width = Math.floor(screenWidth * 0.5);
-    const height = Math.floor(screenHeight * 0.5);
+    const height = screenHeight;
 
     const left = Math.floor((screenWidth - width) / 2);
     const top = Math.floor((screenHeight - height) / 2);
