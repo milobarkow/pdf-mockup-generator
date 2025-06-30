@@ -1,17 +1,20 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import * as s from "./state.mjs";
 
-async function getImg(pdfDoc, img, fromUpload = false) {
+async function getImg(pdfDoc, img, fromUpload = false, fromBase64 = false) {
     var imgBytes, imgType;
     if (fromUpload) {
         imgBytes = await img.arrayBuffer();
         imgType = img.name.split('.').pop().toLowerCase();
+    } else if (fromBase64) {
+        imgType = "png";
+        const response = await fetch(img);
+        imgBytes = await response.arrayBuffer();
     } else {
         const response = await fetch(img);
         imgBytes = await response.arrayBuffer();
         const pathParts = img.split('.');
         imgType = pathParts.length > 1 ? pathParts.pop().toLowerCase() : '';
-        return await pdfDoc.embedPng(imgBytes);
     }
 
     if (imgType == "png") {
@@ -137,27 +140,31 @@ export async function updatePdfInfo(form) {
     if (form.title.value) s.pdfInfo.title = form.title.value;
     if (form.subtitle.value) s.pdfInfo.subtitle = form.subtitle.value;
 
-    const shirtFrontImageFile = document.getElementById("shirtFrontImage").files[0];
-    if (shirtFrontImageFile) s.pdfInfo.shirtFrontImg = shirtFrontImageFile;
+    const frontBlankImageFile = document.getElementById("frontBlankImage").files[0];
+    if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
+
+    const backBlankImageFile = document.getElementById("backBlankImage").files[0];
+    if (backBlankImageFile) s.pdfInfo.backBlankImg = backBlankImageFile;
+
+    const frontLogoImageFile = document.getElementById("frontLogoImage").files[0];
+    if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+
+    const backLogoImageFile = document.getElementById("backLogoImage").files[0];
+    if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
+
     if (form.c1Type) s.pdfInfo.c1.type = form.c1Type.value;
     if (form.c1Dims) s.pdfInfo.c1.dims = form.c1Dims.value;
     if (form.c1Loc) s.pdfInfo.c1.loc = form.c1Loc.value;
 
-    const shirtBackImageFile = document.getElementById("shirtBackImage").files[0];
-    if (shirtBackImageFile) s.pdfInfo.shirtBackImg = shirtBackImageFile;
     if (form.c2Type) s.pdfInfo.c2.type = form.c2Type.value;
     if (form.c2Dims) s.pdfInfo.c2.dims = form.c2Dims.value;
     if (form.c2Loc) s.pdfInfo.c2.loc = form.c2Loc.value;
 
-    const frontLogoImageFile = document.getElementById("frontLogoImage").files[0];
-    if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
     const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
         form[`fcolor${i + 1}`]?.value || ""
     );
     if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
 
-    const backLogoImageFile = document.getElementById("backLogoImage").files[0];
-    if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
     const backLogoColors = Array.from({ length: 8 }, (_, i) =>
         form[`bcolor${i + 1}`]?.value || ""
     );
@@ -298,12 +305,13 @@ async function template1(pdfDoc, page) {
         width: s.pageWidth / 2 - s.marginSide * 1.5,
         height: (s.pageWidth / 2 - s.marginSide * 1.5) * 1.25,
     }
-    // const p1Dims = p1.scale((s.pageWidth - s.marginSide * 3) / p1.size().width / 2);
     const p1X = s.marginSide;
     const p1Y = subtitleY - p1Dims.height - subtitleFontSize;
-    console.log(s.pdfInfo.shirtFrontImg.name);
     if (s.pdfInfo.shirtFrontImg != "") {
-        const p1 = await getImg(pdfDoc, s.pdfInfo.shirtFrontImg, true);
+        const p1 = await getImg(pdfDoc, s.pdfInfo.shirtFrontImg, false, true);
+        putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
+    } else if (s.pdfInfo.frontBlankImg != "") {
+        const p1 = await getImg(pdfDoc, s.pdfInfo.frontBlankImg, true);
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
@@ -317,8 +325,11 @@ async function template1(pdfDoc, page) {
     const p2X = s.pageWidth - s.marginSide - p2Dims.width;
     const p2Y = subtitleY - p2Dims.height - subtitleFontSize;
     if (s.pdfInfo.shirtBackImg != "") {
-        const p2 = await getImg(pdfDoc, s.pdfInfo.shirtBackImg, true);
+        const p2 = await getImg(pdfDoc, s.pdfInfo.shirtBackImg, false, true);
         putImage(page, p2, p2X, p2Y, p2Dims.width, p2Dims.height, false);
+    } else if (s.pdfInfo.backBlankImg != "") {
+        const p1 = await getImg(pdfDoc, s.pdfInfo.backBlankImg, true);
+        putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, p2X, p2Y, p2Dims.width, p2Dims.height, "SHIRT BACK", placeHolderFont);
     }
@@ -460,7 +471,18 @@ export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
 }
 
 
-export async function adjustFrontLogo() {
+window.handlePopupData = function(data) {
+    const side = data.side;
+    if (side == "front") {
+        s.pdfInfo.shirtFrontImg = data.imgUrl;
+    } else if (side == "back") {
+        s.pdfInfo.shirtBackImg = data.imgUrl;
+    } else {
+        console.error("invalid side");
+    }
+};
+
+export async function adjustLogo(side) {
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
 
@@ -470,11 +492,11 @@ export async function adjustFrontLogo() {
     const left = Math.floor((screenWidth - width) / 2);
     const top = Math.floor((screenHeight - height) / 2);
 
-    const shirtUrl = "/pdf-mockup-generator/shirt.jpg";
+    const blankUrl = "/pdf-mockup-generator/shirt.jpg";
     const logoUrl = "/pdf-mockup-generator/fry.png";
 
     window.open(
-        `popup.html?shirt=${encodeURIComponent(shirtUrl)}&logo=${encodeURIComponent(logoUrl)}`,
+        `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
         "PopupWindow",
         `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
     );

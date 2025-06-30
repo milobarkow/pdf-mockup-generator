@@ -1,4 +1,4 @@
-import { createPdf, updatePdfInfo, resetPdfInfo, togglePrintPreview, updateCurrentPage, adjustFrontLogo } from "./mockup.mjs";
+import { createPdf, updatePdfInfo, resetPdfInfo, togglePrintPreview, updateCurrentPage, adjustLogo } from "./mockup.mjs";
 import { pdfInfo } from "./state.mjs"
 
 var canvas = document.getElementById('pdf-canvas');
@@ -119,11 +119,11 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         document.getElementById("pdfForm").reset();
     } else if (action === "clearImg") {
         const id = e.submitter?.id;
-        if (id == "shirtFrontImgClear") {
-            document.getElementById("shirtFrontImage").value = "";
+        if (id == "frontBlankImgClear") {
+            document.getElementById("frontBlankImage").value = "";
             pdfInfo.shirtFrontImg = "";
-        } else if (id == "shirtBackImgClear") {
-            document.getElementById("shirtBackImage").value = "";
+        } else if (id == "backBlankImgClear") {
+            document.getElementById("backBlankImage").value = "";
             pdfInfo.shirtBackImg = "";
         } else if (id == "shirtFrontLogoClear") {
             document.getElementById("frontLogoImage").value = "";
@@ -138,8 +138,12 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         togglePrintPreview();
     } else if (action === "adjustFrontLogo") {
         console.log("Adjusting Front Logo");
-        await adjustFrontLogo();
+        await adjustLogo("front");
+    } else if (action === "adjustBackLogo") {
+        console.log("Adjusting Back Logo");
+        await adjustLogo("back");
     }
+
 
     var pdfBytes = await createPdf();
     renderPdf(pdfBytes);
