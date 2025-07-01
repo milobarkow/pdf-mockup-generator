@@ -1,5 +1,5 @@
-import { createPdf, updatePdfInfo, resetPdfInfo, togglePrintPreview, updateCurrentPage, adjustLogo } from "./mockup.mjs";
-import { pdfInfo } from "./state.mjs"
+import { createPdf, updatePdfInfo, resetPdfInfo, updateCurrentPage, adjustLogo } from "./mockup.mjs";
+import { pdfInfo, togglePrintPreview } from "./state.mjs"
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
@@ -122,9 +122,11 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         if (id == "frontBlankImgClear") {
             document.getElementById("frontBlankImage").value = "";
             pdfInfo.shirtFrontImg = "";
+            pdfInfo.frontBlankImg = "";
         } else if (id == "backBlankImgClear") {
             document.getElementById("backBlankImage").value = "";
             pdfInfo.shirtBackImg = "";
+            pdfInfo.backBlankImg = "";
         } else if (id == "shirtFrontLogoClear") {
             document.getElementById("frontLogoImage").value = "";
             pdfInfo.frontLogoImg = "";

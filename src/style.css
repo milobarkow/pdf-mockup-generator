@@ -154,3 +154,26 @@ button:hover {
     background-color: #357abd;
 }
 
+#afl-button, #abl-button {
+    background-color: #ebdd21;
+}
+
+.toast {
+  background: #f8d7da;         /* light red for warning */
+  color: #842029;              /* dark red text */
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeinout 4s forwards;
+}
+
+@keyframes fadeinout {
+  0%   { opacity: 0;   transform: translateY(-10px); }
+  10%  { opacity: 1;   transform: translateY(  0); }
+  90%  { opacity: 1;   transform: translateY(  0); }
+  100% { opacity: 0;   transform: translateY(-10px); }
+}
+

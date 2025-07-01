@@ -24,18 +24,18 @@
     </div>
 
     <div class="container-item" id="form-container">
-        <form id="page-info-form">
-            <label class="main-label" for="currentPage">Page Editing</label>
-            <input id="currentPage" title="currentPage" type="number" min="1" max="1">
+        <!-- <form id="page-info-form"> -->
+        <!--     <label class="main-label" for="currentPage">Page Editing</label> -->
+        <!--     <input id="currentPage" title="currentPage" type="number" min="1" max="1"> -->
 
-            <label class="main-label" for="subtitle">Page Type</label>
-            <select id="currentPageType">
-              <option value="">-- Select --</option>
-              <option value="template1">Template 1</option>
-              <option value="template2">Template 2</option>
-            </select>
-            <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current Page</button>
-        </form>
+        <!--     <label class="main-label" for="subtitle">Page Type</label> -->
+        <!--     <select id="currentPageType"> -->
+        <!--       <option value="">-- Select --</option> -->
+        <!--       <option value="template1">Template 1</option> -->
+        <!--       <option value="template2">Template 2</option> -->
+        <!--     </select> -->
+        <!--     <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current Page</button> -->
+        <!-- </form> -->
 
             <form id="pdfForm">
               <label class="main-label" for="title">Title</label>
@@ -140,10 +140,11 @@
         <button form="pdfForm" type="submit" name="action" value="exportPdf">Export Pdf</button>
         <button form="pdfForm" type="submit" name="action" value="clearForm">Clear Form</button>
         <button form="pdfForm" type="submit" name="action" value="togglePrintPreview">Toggle Print Preview</button>
-        <button form="pdfForm" type="submit" name="action" value="adjustFrontLogo">Adjust Front Logo</button>
-        <button form="pdfForm" type="submit" name="action" value="adjustBackLogo">Adjust Back Logo</button>
+        <button form="pdfForm" type="submit" name="action" value="adjustFrontLogo" id="afl-button">Adjust Front Logo</button>
+        <button form="pdfForm" type="submit" name="action" value="adjustBackLogo"  id="abl-button">Adjust Back Logo</button>
     </div>
   </div>
+  <div id="toast-container" aria-live="polite" style="position:fixed;top:1rem;right:1rem;z-index:9999;"></div>
 
 </body>
 </html>

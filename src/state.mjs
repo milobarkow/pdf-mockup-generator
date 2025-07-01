@@ -2,12 +2,16 @@ export const pageWidth = 720;
 export const pageHeight = 1080;
 export const marginTop = 25;
 export const marginSide = 35;
-export var showPrintPreview = false;
 export var currentPage = 1;
 export var currentPageType = 1;
 export var pageCount = 1;
 export var logoOnFrontBlank = false;
 export var logoOnBackBlank = false;
+
+export var showPrintPreview = false;
+export async function togglePrintPreview() {
+    showPrintPreview = !showPrintPreview;
+}
 
 export var pdfInfo = {
     title: "Title",
