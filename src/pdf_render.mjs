@@ -19,8 +19,6 @@ async function renderPdf(pdfData) {
     var maxWidth = 0;
     var scale = 1;
 
-    console.log(`pdf page count: ${pdf.numPages}`);
-
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const viewport = page.getViewport({ scale: scale });
@@ -80,27 +78,27 @@ async function exportPdf(pdfBytes) {
     return true;
 }
 
-document.getElementById("page-info-form").addEventListener("submit", async function(e) {
-    e.preventDefault();
+// document.getElementById("page-info-form").addEventListener("submit", async function(e) {
+//     e.preventDefault();
 
-    const form = e.target;
+//     const form = e.target;
 
-    const currentPage = parseInt(form.currentPage.value, 10);
-    const currentPageInput = document.getElementById("currentPage");
+//     const currentPage = parseInt(form.currentPage.value, 10);
+//     const currentPageInput = document.getElementById("currentPage");
 
-    const minPage = currentPageInput.min;
-    const maxPage = currentPageInput.max;
-    if (currentPage < minPage || currentPage > maxPage) {
-        alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
-    }
+//     const minPage = currentPageInput.min;
+//     const maxPage = currentPageInput.max;
+//     if (currentPage < minPage || currentPage > maxPage) {
+//         alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
+//     }
 
-    const currentPageType = form.currentPageType.value;
+//     const currentPageType = form.currentPageType.value;
 
-    await updateCurrentPage(currentPage, currentPageType);
+//     await updateCurrentPage(currentPage, currentPageType);
 
-    var pdfBytes = await createPdf();
-    renderPdf(pdfBytes);
-});
+//     var pdfBytes = await createPdf();
+//     renderPdf(pdfBytes);
+// });
 
 document.getElementById("pdfForm").addEventListener("submit", async function(e) {
     e.preventDefault(); // prevent page reload

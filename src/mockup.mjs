@@ -492,38 +492,41 @@ export async function adjustLogo(side) {
 
     // const blankUrl = "/pdf-mockup-generator/shirt.jpg";
     // const logoUrl = "/pdf-mockup-generator/fry.png";
-    const blankUrl = "";
-    const logoUrl = "";
+    var blankUrl = "";
+    var logoUrl = "";
     if (side == "front") {
-        if (s.pdfInfo.frontLogoImg != "") {
-            blankUrl = s.pdfInfo.frontLogoImg;
+        if (s.pdfInfo.frontBlankImg!= "") {
+            blankUrl = s.pdfInfo.frontBlankImg.name;
         } else {
             showWarning("Must upload front shirt blank image before adjusting"); return;
         }
         if (s.pdfInfo.frontLogoImg != "") {
-            logoUrl = s.pdfInfo.frontLogoImg;
+            logoUrl = s.pdfInfo.frontLogoImg.name;
         } else {
             showWarning("Must upload front logo image before adjusting"); return;
         }
     } else if (side == "back") {
-        if (s.pdfInfo.backLogoImg != "") {
-            blankUrl = s.pdfInfo.backLogoImg;
+        if (s.pdfInfo.backBlankImg!= "") {
+            blankUrl = s.pdfInfo.backBlankImg.name;
         } else {
             showWarning("Must upload back shirt blank image before adjusting"); return;
         }
         if (s.pdfInfo.backLogoImg != "") {
-            logoUrl = s.pdfInfo.backLogoImg;
+            logoUrl = s.pdfInfo.backLogoImg.name;
         } else {
             showWarning("Must upload back logo image before adjusting"); return;
         }
     }
 
+    // console.log(`Blank url: ${blankUrl}`);
+    console.log(blankUrl);
+    console.log(`Logo url: ${logoUrl}`);
     window.open(
         `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
         "PopupWindow",
         `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
     );
-    return;
+    return 1;
 }
 
 export async function createPdf() {
