@@ -158,6 +158,7 @@ button:hover {
     background-color: #ebdd21;
 }
 
+/* warning box popup from showWarning() in util.mjs */
 .toast {
   background: #f8d7da;         /* light red for warning */
   color: #842029;              /* dark red text */

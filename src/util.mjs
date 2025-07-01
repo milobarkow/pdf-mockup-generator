@@ -5,7 +5,6 @@ export function showWarning(msg, duration = 4000) {
     toast.textContent = msg;
     container.appendChild(toast);
 
-    // remove it after animation ends (or after duration)
     setTimeout(() => {
         toast.remove();
     }, duration);

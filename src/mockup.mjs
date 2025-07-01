@@ -184,7 +184,6 @@ async function template2(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const socialsFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER
     const logo = await getImg(pdfDoc, s.pdfInfo.logoPath);
@@ -467,7 +466,6 @@ export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
     }
 }
 
-
 window.handlePopupData = function(data) {
     const side = data.side;
     if (side == "front") {
@@ -479,7 +477,6 @@ window.handlePopupData = function(data) {
     }
 };
 
-
 export async function adjustLogo(side) {
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
@@ -490,12 +487,10 @@ export async function adjustLogo(side) {
     const left = Math.floor((screenWidth - width) / 2);
     const top = Math.floor((screenHeight - height) / 2);
 
-    // const blankUrl = "/pdf-mockup-generator/shirt.jpg";
-    // const logoUrl = "/pdf-mockup-generator/fry.png";
     var blankUrl = "";
     var logoUrl = "";
     if (side == "front") {
-        if (s.pdfInfo.frontBlankImg!= "") {
+        if (s.pdfInfo.frontBlankImg != "") {
             blankUrl = s.pdfInfo.frontBlankImg.name;
         } else {
             showWarning("Must upload front shirt blank image before adjusting"); return;
@@ -506,7 +501,7 @@ export async function adjustLogo(side) {
             showWarning("Must upload front logo image before adjusting"); return;
         }
     } else if (side == "back") {
-        if (s.pdfInfo.backBlankImg!= "") {
+        if (s.pdfInfo.backBlankImg != "") {
             blankUrl = s.pdfInfo.backBlankImg.name;
         } else {
             showWarning("Must upload back shirt blank image before adjusting"); return;
@@ -518,15 +513,12 @@ export async function adjustLogo(side) {
         }
     }
 
-    // console.log(`Blank url: ${blankUrl}`);
-    console.log(blankUrl);
-    console.log(`Logo url: ${logoUrl}`);
     window.open(
         `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
         "PopupWindow",
         `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
     );
-    return 1;
+    return;
 }
 
 export async function createPdf() {
