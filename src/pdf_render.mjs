@@ -1,5 +1,5 @@
-import { createPdf, updatePdfInfo, resetPdfInfo, updateCurrentPage, adjustLogo } from "./mockup.mjs";
-import { pdfInfo, togglePrintPreview } from "./state.mjs"
+import { createPdf, updatePdfInfo, resetPdfInfo, adjustLogo } from "./mockup.mjs";
+import { pdfInfo, togglePrintPreview, updateCurrentPage, currentPageType } from "./state.mjs"
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
@@ -78,29 +78,59 @@ async function exportPdf(pdfBytes) {
     return true;
 }
 
-// document.getElementById("page-info-form").addEventListener("submit", async function(e) {
-//     e.preventDefault();
+document.getElementById("page-info-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-//     const form = e.target;
+    const form = e.target;
 
-//     const currentPage = parseInt(form.currentPage.value, 10);
-//     const currentPageInput = document.getElementById("currentPage");
+    document.getElementById(`pdf-form-${currentPageType}`).reset(); // clear current form before switching
+    updatePdfInfo(form);
 
-//     const minPage = currentPageInput.min;
-//     const maxPage = currentPageInput.max;
-//     if (currentPage < minPage || currentPage > maxPage) {
-//         alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
-//     }
+    const currentPage = parseInt(form.currentPage.value, 10);
+    const currentPageInput = document.getElementById("currentPage");
 
-//     const currentPageType = form.currentPageType.value;
+    const minPage = currentPageInput.min;
+    const maxPage = currentPageInput.max;
+    if (currentPage < minPage || currentPage > maxPage) {
+        alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
+    }
 
-//     await updateCurrentPage(currentPage, currentPageType);
+    const newCurrentPageType = form.currentPageType.value;
 
-//     var pdfBytes = await createPdf();
-//     renderPdf(pdfBytes);
-// });
+    await updateCurrentPage(currentPage, newCurrentPageType);
+    document.getElementById(`pdf-form-${currentPageType}`).reset(); // clear current form before switching
+    updatePdfInfo(form);
 
-document.getElementById("pdfForm").addEventListener("submit", async function(e) {
+    var pdfBytes = await createPdf();
+    renderPdf(pdfBytes);
+});
+
+
+['pdf-form-1', 'pdf-form-2'].forEach(formId => {
+    document
+        .getElementById(formId)
+        .addEventListener('submit', onPdfFormSubmit);
+});
+
+function clearFormImages(id, clearAll = false) {
+    if (id == `frontBlankImgClear${currentPageType}` || clearAll) {
+        document.getElementById(`frontBlankImage${currentPageType}`).value = "";
+        pdfInfo.shirtFrontImg = "";
+        pdfInfo.frontBlankImg = "";
+    } else if (id == `backBlankImgClear1` || clearAll) {
+        document.getElementById(`backBlankImage${currentPageType}`).value = "";
+        pdfInfo.shirtBackImg = "";
+        pdfInfo.backBlankImg = "";
+    } else if (id == `shirtFrontLogoClear${currentPageType}` || clearAll) {
+        document.getElementById(`frontLogoImage${currentPageType}`).value = "";
+        pdfInfo.frontLogoImg = "";
+    } else if (id == `shirtBackLogoClear2` || clearAll) {
+        document.getElementById(`backLogoImage${currentPageType}`).value = "";
+        pdfInfo.backLogoImg = "";
+    }
+}
+
+async function onPdfFormSubmit(e) {
     e.preventDefault(); // prevent page reload
 
     const action = e.submitter?.value; // gets value of the button that triggered submit
@@ -114,24 +144,10 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
         resetPdfInfo();
     } else if (action === "clearForm") {
         console.log("clearing form");
-        document.getElementById("pdfForm").reset();
+        document.getElementById(`pdf-form-${currentPageType}`).reset();
     } else if (action === "clearImg") {
         const id = e.submitter?.id;
-        if (id == "frontBlankImgClear") {
-            document.getElementById("frontBlankImage").value = "";
-            pdfInfo.shirtFrontImg = "";
-            pdfInfo.frontBlankImg = "";
-        } else if (id == "backBlankImgClear") {
-            document.getElementById("backBlankImage").value = "";
-            pdfInfo.shirtBackImg = "";
-            pdfInfo.backBlankImg = "";
-        } else if (id == "shirtFrontLogoClear") {
-            document.getElementById("frontLogoImage").value = "";
-            pdfInfo.frontLogoImg = "";
-        } else if (id == "shirtBackLogoClear") {
-            document.getElementById("backLogoImage").value = "";
-            pdfInfo.backLogoImg = "";
-        }
+        clearFormImages(id);
         return;
     } else if (action === "togglePrintPreview") {
         console.log("toggling print preview (border boxes)");
@@ -153,6 +169,4 @@ document.getElementById("pdfForm").addEventListener("submit", async function(e) 
             console.log("failure exporting pdf");
         }
     }
-});
-
-
+}

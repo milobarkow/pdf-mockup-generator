@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html dir="ltr" mozdisallowselectionprint>
 <head>
   <meta charset="utf-8">
@@ -24,20 +25,21 @@
     </div>
 
     <div class="container-item" id="form-container">
-        <!-- <form id="page-info-form"> -->
-        <!--     <label class="main-label" for="currentPage">Page Editing</label> -->
-        <!--     <input id="currentPage" title="currentPage" type="number" min="1" max="1"> -->
+        <form id="page-info-form">
+            <!-- <label class="main-label" for="currentPage">Page Editing</label> -->
+            <!-- <input id="currentPage" title="currentPage" type="number" min="1" max="1"> -->
 
-        <!--     <label class="main-label" for="subtitle">Page Type</label> -->
-        <!--     <select id="currentPageType"> -->
-        <!--       <option value="">-- Select --</option> -->
-        <!--       <option value="template1">Template 1</option> -->
-        <!--       <option value="template2">Template 2</option> -->
-        <!--     </select> -->
-        <!--     <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current Page</button> -->
-        <!-- </form> -->
+            <!-- <label class="main-label" for="subtitle">Page Type</label> -->
+            <!-- <select id="currentPageType"> -->
+            <!--   <option value="">-- Select --</option> -->
+            <!--   <option value="template1">Template 1</option> -->
+            <!--   <option value="template2">Template 2</option> -->
+            <!-- </select> -->
+            <!-- <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current Page</button> -->
+        </form>
 
-            <form id="pdfForm">
+        <div class="form-container" id="pdf-form-container-1">
+            <form class="pdf-form" id="pdf-form-1">
               <label class="main-label" for="title">Title</label>
                   <input name="title" id="title" title="title" type="text">
 
@@ -47,44 +49,44 @@
               <label class="main-label">Blanks and Logos</label>
                   <label class="sub-label">Blank Front</label>
                       <div class="image-input-group">
-                          <input type="file" id="frontBlankImage" name="frontBlankImage" accept="image/png, image/jpeg" />
-                          <button type="submit" name="action" value="clearImg" id="frontBlankImgClear">remove image</button>
+                          <input type="file" id="frontBlankImage1" name="frontBlankImage" accept="image/png, image/jpeg" />
+                          <button type="submit" name="action" value="clearImg" id="frontBlankImgClear1">remove image</button>
                       </div>
                   <label class="sub-label">Blank Back</label>
                       <div class="image-input-group">
-                          <input type="file" id="backBlankImage" name="backBlankImage" accept="image/png, image/jpeg" />
-                          <button type="submit" name="action" value="clearImg" id="backBlankImgClear">remove image</button>
+                          <input type="file" id="backBlankImage1" name="backBlankImage" accept="image/png, image/jpeg" />
+                          <button type="submit" name="action" value="clearImg" id="backBlankImgClear1">remove image</button>
                       </div>
                   <label class="sub-label">Logo Front</label>
                       <div class="image-input-group">
-                          <input type="file" id="frontLogoImage" name="frontLogoImage" accept="image/png, image/jpeg" />
-                          <button type="submit" name="action" value="clearImg" id="shirtFrontLogoClear">remove image</button>
+                          <input type="file" id="frontLogoImage1" name="frontLogoImage" accept="image/png, image/jpeg" />
+                          <button type="submit" name="action" value="clearImg" id="shirtFrontLogoClear1">remove image</button>
                       </div>
                   <label class="sub-label">Logo Back</label>
                       <div class="image-input-group">
-                          <input type="file" id="backLogoImage" name="backLogoImage" accept="image/png, image/jpeg" />
-                          <button type="submit" name="action" value="clearImg" id="shirtBackLogoClear">remove image</button>
+                          <input type="file" id="backLogoImage1" name="backLogoImage" accept="image/png, image/jpeg" />
+                          <button type="submit" name="action" value="clearImg" id="shirtBackLogoClear1">remove image</button>
                       </div>
 
               <label class="main-label">Shirt Front</label>
-                  <label class="sub-label" for="printTypeFront">Print Type</label>
-                  <input name="printTypeFront" id="printTypeFront" subtitle="printTypeFront" type="text">
+                  <label class="sub-label" for="printTypeFront1">Print Type</label>
+                  <input name="printTypeFront1" id="printTypeFront1" subtitle="printTypeFront1" type="text">
 
-                  <label class="sub-label" for="printDimsFront">Dimensions</label>
-                  <input name="printDimsFront" id="printDimsFront" subtitle="printDimsFront" type="text">
+                  <label class="sub-label" for="printDimsFront1">Dimensions</label>
+                  <input name="printDimsFront1" id="printDimsFront1" subtitle="printDimsFront1" type="text">
 
-                  <label class="sub-label" for="printLocFront">Print Location</label>
-                  <input name="printLocFront" id="printLocFront" subtitle="printLocFront" type="text">
+                  <label class="sub-label" for="printLocFront1">Print Location</label>
+                  <input name="printLocFront1" id="printLocFront1" subtitle="printLocFront1" type="text">
 
               <label class="main-label">Shirt Back</label>
-                  <label class="sub-label" for="printTypeBack">Print Type</label>
-                  <input name="printTypeBack" id="printTypeBack" subtitle="printTypeBack" type="text">
+                  <label class="sub-label" for="printTypeBack1">Print Type</label>
+                  <input name="printTypeBack1" id="printTypeBack1" subtitle="printTypeBack1" type="text">
 
-                  <label class="sub-label" for="printDimsBack">Dimensions</label>
-                  <input name="printDimsBack" id="printDimsBack" subtitle="printDimsBack" type="text">
+                  <label class="sub-label" for="printDimsBack1">Dimensions</label>
+                  <input name="printDimsBack1" id="printDimsBack1" subtitle="printDimsBack1" type="text">
 
-                  <label class="sub-label" for="printLocBack">Print Location</label>
-                  <input name="printLocBack" id="printLocBack" subtitle="printLocBack" type="text">
+                  <label class="sub-label" for="printLocBack1">Print Location</label>
+                  <input name="printLocBack1" id="printLocBack1" subtitle="printLocBack1" type="text">
 
               <label class="main-label">Front Logo</label>
                   <label class="sub-label">Colors</label>
@@ -122,26 +124,40 @@
               <label class="main-label" for="pdfName">PDF Output File Name</label>
                   <input id="pdfName" name="pdfName" title="pdfName" type="text">
             </form>
+        </div>
 
+        <div class="form-container" id="pdf-form-container-2">
+            <form class="pdf-form" id="pdf-form-2">
+              <label class="sub-label">Blank</label>
+                  <div class="image-input-group">
+                      <input type="file" id="frontBlankImage2" name="frontBlankImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="frontBlankImgClear2">remove image</button>
+                  </div>
+              <label class="sub-label">Logo</label>
+                  <div class="image-input-group">
+                      <input type="file" id="frontLogoImage2" name="frontLogoImage" accept="image/png, image/jpeg" />
+                      <button type="submit" name="action" value="clearImg" id="shirtFrontLogoClear2">remove image</button>
+                  </div>
+              <label class="sub-label" for="printTypeFront2">Print Type</label>
+              <input name="printTypeFront2" id="printTypeFront2" subtitle="printTypeFront2" type="text">
 
-        <!-- <div id="form2-container" style="display: none;"> -->
-        <!--     <form id="pdfForm2"> -->
-        <!--       <label class="main-label" for="title">Title</label> -->
-        <!--       <input id="title" title="title" type="text"> -->
+              <label class="sub-label" for="printDimsFront2">Dimensions</label>
+              <input name="printDimsFront2" id="printDimsFront2" subtitle="printDimsFront2" type="text">
 
-        <!--       <label class="main-label" for="subtitle">SubTitle</label> -->
-        <!--       <input id="subtitle" subtitle="subtitle" type="text"> -->
-        <!-- </div> -->
+              <label class="sub-label" for="printLocFront2">Print Location</label>
+              <input name="printLocFront2" id="printLocFront2" subtitle="printLocFront2" type="text">
+            </form>
+        </div>
     </div>
 
     <div class="container-item" id="form-buttons">
-        <button form="pdfForm" type="submit" name="action" value="updatePdf">Update Mockup</button>
-        <button form="pdfForm" type="submit" name="action" value="resetInfo">Reset Defaults</button>
-        <button form="pdfForm" type="submit" name="action" value="exportPdf">Export Pdf</button>
-        <button form="pdfForm" type="submit" name="action" value="clearForm">Clear Form</button>
-        <button form="pdfForm" type="submit" name="action" value="togglePrintPreview">Toggle Print Preview</button>
-        <button form="pdfForm" type="submit" name="action" value="adjustFrontLogo" id="afl-button">Adjust Front Logo</button>
-        <button form="pdfForm" type="submit" name="action" value="adjustBackLogo"  id="abl-button">Adjust Back Logo</button>
+        <button form="pdf-form-1" type="submit" name="action" value="updatePdf">Update Mockup</button>
+        <button form="pdf-form-1" type="submit" name="action" value="resetInfo">Reset Defaults</button>
+        <button form="pdf-form-1" type="submit" name="action" value="exportPdf">Export Pdf</button>
+        <button form="pdf-form-1" type="submit" name="action" value="clearForm">Clear Form</button>
+        <button form="pdf-form-1" type="submit" name="action" value="togglePrintPreview">Toggle Print Preview</button>
+        <button form="pdf-form-1" type="submit" name="action" value="adjustFrontLogo" id="afl-button">Adjust Front Logo</button>
+        <button form="pdf-form-1" type="submit" name="action" value="adjustBackLogo"  id="abl-button">Adjust Back Logo</button>
     </div>
   </div>
   <div id="toast-container" aria-live="polite" style="position:fixed;top:1rem;right:1rem;z-index:9999;"></div>
