@@ -23,7 +23,7 @@ async function getImg(pdfDoc, img, imgSrc) { //, fromUpload = false, fromBase64 
     } else if (imgType == "jpg") {
         return await pdfDoc.embedJpg(imgBytes);
     }
-    throw new Error("Bad image type, image must be .png or .jpg");
+    console.error("Bad image type, image must be .png or .jpg");
 }
 
 function hexToRgb(hex) {
@@ -178,7 +178,6 @@ export async function updatePdfInfo(form) {
             s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
         }
     } else if (s.currentPageType == 2) {
-
         const frontBlankImageFile = document.getElementById("frontBlankImage2").files[0];
         if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
 
@@ -214,7 +213,7 @@ async function template2(pdfDoc, page) {
 
     // FONTS
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic )
+    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic)
 
     // SHIRT FRONT
     const p1Dims = {
@@ -279,7 +278,7 @@ async function template1(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const socialsFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic )
+    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic)
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER

@@ -142,7 +142,6 @@ button {
   margin: auto;
   display: flex;
   align-items: center;
-  cursor: pointer;
   width: fit-content;
   padding: 0.4rem 0.75rem;
   background-color: #e74c3c;
@@ -150,16 +149,16 @@ button {
   border-radius: 5px;
   font-weight: bold;
   transition: background-color 0.2s ease;
-  border: 2px solid black;
-}
-
-button:hover {
-    background-color: #357abd;
 }
 
 #afl-button, #abl-button {
     background-color: #ebdd21;
 }
+
+button:hover {
+    filter: brightness(0.8);
+}
+
 
 /* warning box popup from showWarning() in util.mjs */
 .toast {
