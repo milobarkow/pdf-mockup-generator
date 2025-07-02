@@ -37,6 +37,7 @@ export var logoOnBackBlank = false;
 
 export var showPrintPreview = false;
 export async function togglePrintPreview() {
+    console.log("toggling print preview (border boxes)");
     showPrintPreview = !showPrintPreview;
 }
 

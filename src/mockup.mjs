@@ -134,49 +134,77 @@ function getCaptionString(capObj) {
 }
 
 export async function updatePdfInfo(form) {
-    if (form.title && form.title.value) s.pdfInfo.title = form.title.value;
-    if (form.subtitle && form.subtitle.value) s.pdfInfo.subtitle = form.subtitle.value;
+    console.log("updating PDF");
 
-    const frontBlankImageFile = document.getElementById("frontBlankImage1").files[0];
-    if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
+    if (s.currentPageType == 1) {
+        if (form.title && form.title.value) s.pdfInfo.title = form.title.value;
+        if (form.subtitle && form.subtitle.value) s.pdfInfo.subtitle = form.subtitle.value;
 
-    const backBlankImageFile = document.getElementById("backBlankImage1").files[0];
-    if (backBlankImageFile) s.pdfInfo.backBlankImg = backBlankImageFile;
+        const frontBlankImageFile = document.getElementById("frontBlankImage1").files[0];
+        if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
 
-    const frontLogoImageFile = document.getElementById("frontLogoImage1").files[0];
-    if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+        const backBlankImageFile = document.getElementById("backBlankImage1").files[0];
+        if (backBlankImageFile) s.pdfInfo.backBlankImg = backBlankImageFile;
 
-    const backLogoImageFile = document.getElementById("backLogoImage1").files[0];
-    if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
+        const frontLogoImageFile = document.getElementById("frontLogoImage1").files[0];
+        if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
 
-    if (form.c1Type) s.pdfInfo.c1.type = form.c1Type.value;
-    if (form.c1Dims) s.pdfInfo.c1.dims = form.c1Dims.value;
-    if (form.c1Loc) s.pdfInfo.c1.loc = form.c1Loc.value;
+        const backLogoImageFile = document.getElementById("backLogoImage1").files[0];
+        if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
 
-    if (form.c2Type) s.pdfInfo.c2.type = form.c2Type.value;
-    if (form.c2Dims) s.pdfInfo.c2.dims = form.c2Dims.value;
-    if (form.c2Loc) s.pdfInfo.c2.loc = form.c2Loc.value;
+        if (form.printTypeFront1) s.pdfInfo.c1.type = form.printTypeFront1.value;
+        if (form.printDimsFront1) s.pdfInfo.c1.dims = form.printDimsFront1.value;
+        if (form.printLocFront1) s.pdfInfo.c1.loc = form.printLocFront1.value;
 
-    const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
-        form[`fcolor${i + 1}`]?.value || ""
-    );
-    if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
+        if (form.printTypeBack1) s.pdfInfo.c2.type = form.printTypeBack1.value;
+        if (form.printDimsBack1) s.pdfInfo.c2.dims = form.printDimsBack1.value;
+        if (form.printLocBack1) s.pdfInfo.c2.loc = form.printLocBack1.value;
 
-    const backLogoColors = Array.from({ length: 8 }, (_, i) =>
-        form[`bcolor${i + 1}`]?.value || ""
-    );
-    if (backLogoColors) s.pdfInfo.backLogoColors = backLogoColors;
+        const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
+            form[`fcolor${i + 1}`]?.value || ""
+        );
+        if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
 
-    if (form.mockupNum && form.mockupNum.value) s.pdfInfo.mockupNum = form.mockupNum.value;
+        const backLogoColors = Array.from({ length: 8 }, (_, i) =>
+            form[`bcolor${i + 1}`]?.value || ""
+        );
+        if (backLogoColors) s.pdfInfo.backLogoColors = backLogoColors;
 
-    if (form.pdfname) {
-        s.pdfInfo.pdfName = form.pdfname.value;
-    } else {
-        s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
+        if (form.mockupNum && form.mockupNum.value) s.pdfInfo.mockupNum = form.mockupNum.value;
+
+        if (form.pdfName1) {
+            s.pdfInfo.pdfName = form.pdfName1.value;
+        } else {
+            s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
+        }
+    } else if (s.currentPageType == 2) {
+
+        const frontBlankImageFile = document.getElementById("frontBlankImage2").files[0];
+        if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
+
+        const frontLogoImageFile = document.getElementById("frontLogoImage2").files[0];
+        if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+
+        if (form.printTypeFront2) s.pdfInfo.c1.type = form.printTypeFront2.value;
+        if (form.printDimsFront2) s.pdfInfo.c1.dims = form.printDimsFront2.value;
+        if (form.printLocFront2) s.pdfInfo.c1.loc = form.printLocFront2.value;
+
+        if (form.pdfName2) {
+            s.pdfInfo.pdfName = form.pdfName2.value;
+        } else {
+            s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
+        }
+
     }
 }
 
+export async function clearFormInputs() {
+    console.log("clearing form");
+    document.getElementById(`pdf-form-${s.currentPageType}`).reset();
+}
+
 export async function resetPdfInfo() {
+    console.log("restoring default PDF info");
     Object.assign(s.pdfInfo, s.defaultPdfInfo);
 }
 
@@ -186,7 +214,7 @@ async function template2(pdfDoc, page) {
 
     // FONTS
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const captionFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic )
 
     // SHIRT FRONT
     const p1Dims = {
@@ -206,8 +234,8 @@ async function template2(pdfDoc, page) {
     }
 
     // SHIRT FRONT CAPTION
-    const captionFontSize = 14;
-    const captionColor = hexToRgb('#4d4e4e');
+    const captionFontSize = 16;
+    const captionColor = hexToRgb('#000000');
     const captionLineHeight = Math.ceil(captionFontSize * 1.3);
 
     const c1X = p1X;
@@ -251,7 +279,7 @@ async function template1(pdfDoc, page) {
     // FONTS
     const titleFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const socialsFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
-    const captionFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const captionFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic )
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER
@@ -343,7 +371,7 @@ async function template1(pdfDoc, page) {
 
     // SHIRT FRONT CAPTION
     const captionFontSize = 14;
-    const captionColor = hexToRgb('#4d4e4e');
+    const captionColor = hexToRgb('#000000');
     const captionLineHeight = Math.ceil(captionFontSize * 1.3);
 
     const c1X = p1X;
@@ -369,6 +397,7 @@ async function template1(pdfDoc, page) {
     const c2X = p2X;
     const c2Y = p2Y - captionLineHeight;
     const c2 = getCaptionString(s.pdfInfo.c2);
+    console.log(s.pdfInfo.c2);
     page.drawText(c2.join("\n"), {
         x: c2X,
         y: c2Y,
@@ -469,6 +498,8 @@ window.handlePopupData = function(data) {
 };
 
 export async function adjustLogo(side) {
+    console.log(`Adjusting ${side} Logo`);
+
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
 

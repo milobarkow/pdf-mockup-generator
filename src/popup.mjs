@@ -1,4 +1,4 @@
-import { Canvas, Image, Circle } from 'fabric'
+import { Canvas, Image } from 'fabric'
 
 const params = new URLSearchParams(window.location.search);
 const blankUrl = params.get("blank");
@@ -16,29 +16,43 @@ canvas.setHeight(canvasHeight);
 // canvas.getElement().style.border = "2px solid #FF0000";
 canvas.getElement().style.backgroundColor = "#181818";
 
-
-Image.fromURL(blankUrl).then((blankImg) => {
-    blankImg.set({
-        scaleX: 0.8,
-        scaleY: 0.8,
-        selectable: false,
-    });
-
-    canvas.setWidth(blankImg.getScaledWidth());
-    canvas.setHeight(blankImg.getScaledHeight());
-    canvas.add(blankImg);
-
-    Image.fromURL(logoUrl).then((logoImg) => {
-        logoImg.set({
-            scaleX: 0.5,
-            scaleY: 0.5,
+async function setLogo() {
+    canvas.clear();
+    Image.fromURL(blankUrl).then((blankImg) => {
+        blankImg.set({
+            scaleX: 0.8,
+            scaleY: 0.8,
+            selectable: false,
         });
-        canvas.centerObject(logoImg);
-        canvas.add(logoImg);
-    });
-});
 
-document.getElementById("export-button").addEventListener("click", async function(e) {
+        canvas.setWidth(blankImg.getScaledWidth());
+        canvas.setHeight(blankImg.getScaledHeight());
+        canvas.add(blankImg);
+
+        Image.fromURL(logoUrl).then((logoImg) => {
+            logoImg.set({
+                scaleX: 0.5,
+                scaleY: 0.5,
+            });
+            canvas.centerObject(logoImg);
+            canvas.add(logoImg);
+
+            document.getElementById("reset-logo-button").addEventListener("click", async function() {
+                logoImg.set({
+                    scaleX: 0.5,
+                    scaleY: 0.5,
+                });
+                canvas.centerObject(logoImg);
+            });
+        });
+    });
+}
+setLogo(); // call on load
+
+// document.getElementById("reset-logo-button").addEventListener("click", setLogo());
+
+
+document.getElementById("export-button").addEventListener("click", async function() {
     console.log(`sending ${side} image back to main window`);
     const dataUrl = canvas.toDataURL({
         format: 'png',

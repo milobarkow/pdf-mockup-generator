@@ -1,4 +1,4 @@
-import { createPdf, updatePdfInfo, resetPdfInfo, adjustLogo } from "./mockup.mjs";
+import { createPdf, updatePdfInfo, clearFormInputs, resetPdfInfo, adjustLogo } from "./mockup.mjs";
 import { pdfInfo, togglePrintPreview, updateCurrentPage, currentPageType } from "./state.mjs"
 
 var canvas = document.getElementById('pdf-canvas');
@@ -75,7 +75,7 @@ async function exportPdf(pdfBytes) {
     URL.revokeObjectURL(link.href);
 
     console.log(`PDF saved as ${pdfInfo.pdfName}`);
-    return true;
+    return;
 }
 
 document.getElementById("page-info-form").addEventListener("submit", async function(e) {
@@ -136,37 +136,25 @@ async function onPdfFormSubmit(e) {
     const action = e.submitter?.value; // gets value of the button that triggered submit
 
     if (action === "updatePdf") {
-        console.log("updating PDF");
-        const form = e.target;
-        updatePdfInfo(form);
+        updatePdfInfo(e.target);
     } else if (action === "resetInfo") {
-        console.log("restoring default PDF info");
         resetPdfInfo();
     } else if (action === "clearForm") {
-        console.log("clearing form");
-        document.getElementById(`pdf-form-${currentPageType}`).reset();
+        clearFormInputs();
     } else if (action === "clearImg") {
-        const id = e.submitter?.id;
-        clearFormImages(id);
-        return;
+        clearFormImages(e.submitter?.id); return;
     } else if (action === "togglePrintPreview") {
-        console.log("toggling print preview (border boxes)");
         togglePrintPreview();
     } else if (action === "adjustFrontLogo") {
-        console.log("Adjusting Front Logo");
         await adjustLogo("front");
     } else if (action === "adjustBackLogo") {
-        console.log("Adjusting Back Logo");
         await adjustLogo("back");
     }
-
 
     var pdfBytes = await createPdf();
     renderPdf(pdfBytes);
 
     if (action === "exportPdf") {
-        if (!exportPdf(pdfBytes)) {
-            console.log("failure exporting pdf");
-        }
+        exportPdf(pdfBytes);
     }
 }
