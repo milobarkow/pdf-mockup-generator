@@ -69,5 +69,5 @@ export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
             btn.setAttribute('form', formId);
         });
 }
-await updateCurrentPage(1, "template1");
+updateCurrentPage(1, "template1");
 
