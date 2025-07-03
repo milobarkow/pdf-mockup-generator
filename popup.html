@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <link rel="shortcut icon" href="#">
+      <title>Image Popup</title>
+      <link rel="stylesheet" href="./src/popup.css" >
+    </head>
+    <body>
+        <script type="module" src="./src/popup.mjs"></script>
+        <div class="container">
+            <div id="buttons-container">
+                <button id="reset-logo-button" type="submit" name="action" value="resetLogo">Reset Logo</button>
+                <button id="export-button" type="submit" name="action" value="exportImage">Export</button>
+            </div>
+            <div id="canvas-container">
+                <canvas id="popup-canvas"></canvas>
+            </div>
+        </div>
+    </body>
+</html>
+

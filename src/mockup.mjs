@@ -535,7 +535,7 @@ export async function adjustLogo(side) {
     }
 
     window.open(
-        `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
+        `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
         "PopupWindow",
         `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
     );
