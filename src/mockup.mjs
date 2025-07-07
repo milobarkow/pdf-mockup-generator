@@ -545,8 +545,9 @@ export async function adjustLogo(side) {
         }
     }
 
+    // `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
     window.open(
-        `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
+        `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
         "PopupWindow",
         `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
     );
