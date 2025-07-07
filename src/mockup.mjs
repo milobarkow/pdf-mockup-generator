@@ -133,78 +133,90 @@ function getCaptionString(capObj) {
     return caption;
 }
 
-export async function updatePdfInfo(form) {
+export function updatePdfInfo(form) {
     console.log("updating PDF");
 
-    if (s.currentPageType == 1) {
-        if (form.title && form.title.value) s.pdfInfo.title = form.title.value;
-        if (form.subtitle && form.subtitle.value) s.pdfInfo.subtitle = form.subtitle.value;
+    switch (s.pages[s.currentPage].type) {
+        case 1:
+            {
+                if (form.title) {
+                    if (form.title.value == "") s.pages[s.currentPage].info.title = "Title";
+                    else s.pages[s.currentPage].info.title = form.title.value;
+                }
+                if (form.subtitle) {
+                    if (form.subtitle.value == "") s.pages[s.currentPage].info.subtitle = "Subtitle";
+                    else s.pages[s.currentPage].info.subtitle = form.subtitle.value;
+                }
 
-        const frontBlankImageFile = document.getElementById("frontBlankImage1").files[0];
-        if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
+                const frontBlankImageFile = document.getElementById("frontBlankImage1").files[0];
+                if (frontBlankImageFile) s.pages[s.currentPage].info.frontBlankImg = frontBlankImageFile;
 
-        const backBlankImageFile = document.getElementById("backBlankImage1").files[0];
-        if (backBlankImageFile) s.pdfInfo.backBlankImg = backBlankImageFile;
+                const backBlankImageFile = document.getElementById("backBlankImage1").files[0];
+                if (backBlankImageFile) s.pages[s.currentPage].info.backBlankImg = backBlankImageFile;
 
-        const frontLogoImageFile = document.getElementById("frontLogoImage1").files[0];
-        if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+                const frontLogoImageFile = document.getElementById("frontLogoImage1").files[0];
+                if (frontLogoImageFile) s.pages[s.currentPage].info.frontLogoImg = frontLogoImageFile;
 
-        const backLogoImageFile = document.getElementById("backLogoImage1").files[0];
-        if (backLogoImageFile) s.pdfInfo.backLogoImg = backLogoImageFile;
+                const backLogoImageFile = document.getElementById("backLogoImage1").files[0];
+                if (backLogoImageFile) s.pages[s.currentPage].info.backLogoImg = backLogoImageFile;
 
-        if (form.printTypeFront1) s.pdfInfo.c1.type = form.printTypeFront1.value;
-        if (form.printDimsFront1) s.pdfInfo.c1.dims = form.printDimsFront1.value;
-        if (form.printLocFront1) s.pdfInfo.c1.loc = form.printLocFront1.value;
+                if (form.printTypeFront1) s.pages[s.currentPage].info.c1.type = form.printTypeFront1.value;
+                if (form.printDimsFront1) s.pages[s.currentPage].info.c1.dims = form.printDimsFront1.value;
+                if (form.printLocFront1) s.pages[s.currentPage].info.c1.loc = form.printLocFront1.value;
 
-        if (form.printTypeBack1) s.pdfInfo.c2.type = form.printTypeBack1.value;
-        if (form.printDimsBack1) s.pdfInfo.c2.dims = form.printDimsBack1.value;
-        if (form.printLocBack1) s.pdfInfo.c2.loc = form.printLocBack1.value;
+                if (form.printTypeBack1) s.pages[s.currentPage].info.c2.type = form.printTypeBack1.value;
+                if (form.printDimsBack1) s.pages[s.currentPage].info.c2.dims = form.printDimsBack1.value;
+                if (form.printLocBack1) s.pages[s.currentPage].info.c2.loc = form.printLocBack1.value;
 
-        const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
-            form[`fcolor${i + 1}`]?.value || ""
-        );
-        if (frontLogoColors) s.pdfInfo.frontLogoColors = frontLogoColors;
+                const frontLogoColors = Array.from({ length: 8 }, (_, i) =>
+                    form[`fcolor${i + 1}`]?.value || ""
+                );
+                if (frontLogoColors) s.pages[s.currentPage].info.frontLogoColors = frontLogoColors;
 
-        const backLogoColors = Array.from({ length: 8 }, (_, i) =>
-            form[`bcolor${i + 1}`]?.value || ""
-        );
-        if (backLogoColors) s.pdfInfo.backLogoColors = backLogoColors;
+                const backLogoColors = Array.from({ length: 8 }, (_, i) =>
+                    form[`bcolor${i + 1}`]?.value || ""
+                );
+                if (backLogoColors) s.pages[s.currentPage].info.backLogoColors = backLogoColors;
 
-        if (form.mockupNum && form.mockupNum.value) s.pdfInfo.mockupNum = form.mockupNum.value;
+                if (form.mockupNum && form.mockupNum.value) s.pages[s.currentPage].info.mockupNum = form.mockupNum.value;
 
-        if (form.pdfName1) {
-            s.pdfInfo.pdfName = form.pdfName1.value;
-        } else {
-            s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
-        }
-    } else if (s.currentPageType == 2) {
-        const frontBlankImageFile = document.getElementById("frontBlankImage2").files[0];
-        if (frontBlankImageFile) s.pdfInfo.frontBlankImg = frontBlankImageFile;
+                if (form.pdfName1) {
+                    s.pages[s.currentPage].info.pdfName = form.pdfName1.value;
+                } else {
+                    s.pages[s.currentPage].info.pdfName = s.defaultPdfInfo.pdfName;
+                }
+            }
+            break;
+        case 2:
+            {
+                const frontBlankImageFile = document.getElementById("frontBlankImage2").files[0];
+                if (frontBlankImageFile) s.pages[s.currentPage].info.frontBlankImg = frontBlankImageFile;
 
-        const frontLogoImageFile = document.getElementById("frontLogoImage2").files[0];
-        if (frontLogoImageFile) s.pdfInfo.frontLogoImg = frontLogoImageFile;
+                const frontLogoImageFile = document.getElementById("frontLogoImage2").files[0];
+                if (frontLogoImageFile) s.pages[s.currentPage].info.frontLogoImg = frontLogoImageFile;
 
-        if (form.printTypeFront2) s.pdfInfo.c1.type = form.printTypeFront2.value;
-        if (form.printDimsFront2) s.pdfInfo.c1.dims = form.printDimsFront2.value;
-        if (form.printLocFront2) s.pdfInfo.c1.loc = form.printLocFront2.value;
+                if (form.printTypeFront2) s.pages[s.currentPage].info.c1.type = form.printTypeFront2.value;
+                if (form.printDimsFront2) s.pages[s.currentPage].info.c1.dims = form.printDimsFront2.value;
+                if (form.printLocFront2) s.pages[s.currentPage].info.c1.loc = form.printLocFront2.value;
 
-        if (form.pdfName2) {
-            s.pdfInfo.pdfName = form.pdfName2.value;
-        } else {
-            s.pdfInfo.pdfName = s.defaultPdfInfo.pdfName;
-        }
-
+                if (form.pdfName2) {
+                    s.pages[s.currentPage].info.pdfName = form.pdfName2.value;
+                } else {
+                    s.pages[s.currentPage].info.pdfName = s.defaultPdfInfo.pdfName;
+                }
+            }
+            break;
     }
 }
 
-export async function clearFormInputs() {
+export function clearFormInputs() {
     console.log("clearing form");
-    document.getElementById(`pdf-form-${s.currentPageType}`).reset();
+    document.getElementById(`pdf-form-${s.pages[s.currentPage].type}`).reset();
 }
 
 export async function resetPdfInfo() {
     console.log("restoring default PDF info");
-    Object.assign(s.pdfInfo, s.defaultPdfInfo);
+    Object.assign(s.pages[s.currentPage].info, s.defaultPdfInfo);
 }
 
 async function template2(pdfDoc, page) {
@@ -222,11 +234,11 @@ async function template2(pdfDoc, page) {
     }
     const p1X = (s.pageWidth / 2 - p1Dims.width / 2);   //marginSide;
     const p1Y = s.pageHeight - marginTop - p1Dims.height;
-    if (s.pdfInfo.shirtFrontImg != "") {
-        const p1 = await getImg(pdfDoc, s.pdfInfo.shirtFrontImg, "base64");
+    if (s.pages[s.currentPage].info.shirtFrontImg != "") {
+        const p1 = await getImg(pdfDoc, s.pages[s.currentPage].info.shirtFrontImg, "base64");
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
-    } else if (s.pdfInfo.frontBlankImg != "") {
-        const p1 = await getImg(pdfDoc, s.pdfInfo.frontBlankImg, "upload");
+    } else if (s.pages[s.currentPage].info.frontBlankImg != "") {
+        const p1 = await getImg(pdfDoc, s.pages[s.currentPage].info.frontBlankImg, "upload");
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
@@ -239,7 +251,7 @@ async function template2(pdfDoc, page) {
 
     const c1X = p1X;
     const c1Y = p1Y - captionLineHeight;
-    const c1 = getCaptionString(s.pdfInfo.c1);
+    const c1 = getCaptionString(s.pages[s.currentPage].info.c1);
     page.drawText(c1.join("\n"), {
         x: c1X,
         y: c1Y,
@@ -263,8 +275,8 @@ async function template2(pdfDoc, page) {
     }
     const logoX = (s.pageWidth / 2 - logoDims.width / 2);   //marginSide;
     const logoY = c1TextBottomY - logoDims.height - captionLineHeight / 2;
-    if (s.pdfInfo.frontLogoImg != "") {
-        const logo = await getImg(pdfDoc, s.pdfInfo.frontLogoImg, "upload");
+    if (s.pages[s.currentPage].info.frontLogoImg != "") {
+        const logo = await getImg(pdfDoc, s.pages[s.currentPage].info.frontLogoImg, "upload");
         putImage(page, logo, logoX, logoY, logoDims.width, logoDims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, logoX, logoY, logoDims.width, logoDims.height, "LOGO FRONT", placeHolderFont);
@@ -282,7 +294,7 @@ async function template1(pdfDoc, page) {
     const placeHolderFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // HEADER
-    const logo = await getImg(pdfDoc, s.pdfInfo.logoPath);
+    const logo = await getImg(pdfDoc, s.pages[s.currentPage].info.logoPath);
     const logoDims = logo.scale(0.70);
     const logoX = marginSide;
     const logoY = s.pageHeight - logoDims.height - marginTop;
@@ -295,11 +307,11 @@ async function template1(pdfDoc, page) {
     const titleX = marginSide;
     const titleY = s.pageHeight - logoDims.height - marginTop - titleFontSize * 1.3;
     const subtitleY = titleY - titleFontSize;
-    page.drawText(s.pdfInfo.title, {
+    page.drawText(s.pages[s.currentPage].info.title, {
         x: titleX, y: titleY,
         size: titleFontSize, font: titleFont, color: titleColor,
     })
-    page.drawText(s.pdfInfo.subtitle, {
+    page.drawText(s.pages[s.currentPage].info.subtitle, {
         x: titleX, y: subtitleY,
         size: subtitleFontSize, font: titleFont, color: titleColor,
     })
@@ -308,13 +320,13 @@ async function template1(pdfDoc, page) {
     const socialsFontSize = 16;
     const socialsTextColor = hexToRgb('#000000');
 
-    const websiteX = s.pageWidth - marginSide - socialsFont.widthOfTextAtSize(s.pdfInfo.website, socialsFontSize);
+    const websiteX = s.pageWidth - marginSide - socialsFont.widthOfTextAtSize(s.pages[s.currentPage].info.website, socialsFontSize);
     const websiteY = s.pageHeight - marginTop - socialsFontSize;
-    page.drawText(s.pdfInfo.website, {
+    page.drawText(s.pages[s.currentPage].info.website, {
         x: websiteX, y: websiteY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const globe = await getImg(pdfDoc, s.pdfInfo.globePath);
+    const globe = await getImg(pdfDoc, s.pages[s.currentPage].info.globePath);
     const globeDims = globe.scale(1);
     const globeX = websiteX - globeDims.width * 1.5;
     const globeY = websiteY - (globeDims.height - socialsFontSize) / 2;
@@ -322,11 +334,11 @@ async function template1(pdfDoc, page) {
 
     const instaX = websiteX;
     const instaY = websiteY - socialsFontSize * 1.8;
-    page.drawText(s.pdfInfo.instagram, {
+    page.drawText(s.pages[s.currentPage].info.instagram, {
         x: instaX, y: instaY,
         size: socialsFontSize, font: socialsFont, color: socialsTextColor,
     })
-    const instaLogo = await getImg(pdfDoc, s.pdfInfo.instaLogoPath);
+    const instaLogo = await getImg(pdfDoc, s.pages[s.currentPage].info.instaLogoPath);
     const instaLogoDims = instaLogo.scale(1.1);
     const instaLogoX = globeX;
     const instaLogoY = instaY - (instaLogoDims.height - socialsFontSize) / 2;
@@ -341,11 +353,11 @@ async function template1(pdfDoc, page) {
     }
     const p1X = marginSide;
     const p1Y = subtitleY - p1Dims.height - subtitleFontSize;
-    if (s.pdfInfo.shirtFrontImg != "") {
-        const p1 = await getImg(pdfDoc, s.pdfInfo.shirtFrontImg, "base64");
+    if (s.pages[s.currentPage].info.shirtFrontImg != "") {
+        const p1 = await getImg(pdfDoc, s.pages[s.currentPage].info.shirtFrontImg, "base64");
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
-    } else if (s.pdfInfo.frontBlankImg != "") {
-        const p1 = await getImg(pdfDoc, s.pdfInfo.frontBlankImg, "upload");
+    } else if (s.pages[s.currentPage].info.frontBlankImg != "") {
+        const p1 = await getImg(pdfDoc, s.pages[s.currentPage].info.frontBlankImg, "upload");
         putImage(page, p1, p1X, p1Y, p1Dims.width, p1Dims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, p1X, p1Y, p1Dims.width, p1Dims.height, "SHIRT FRONT", placeHolderFont);
@@ -358,11 +370,11 @@ async function template1(pdfDoc, page) {
     }
     const p2X = s.pageWidth - marginSide - p2Dims.width;
     const p2Y = subtitleY - p2Dims.height - subtitleFontSize;
-    if (s.pdfInfo.shirtBackImg != "") {
-        const p2 = await getImg(pdfDoc, s.pdfInfo.shirtBackImg, "base64");
+    if (s.pages[s.currentPage].info.shirtBackImg != "") {
+        const p2 = await getImg(pdfDoc, s.pages[s.currentPage].info.shirtBackImg, "base64");
         putImage(page, p2, p2X, p2Y, p2Dims.width, p2Dims.height, false);
-    } else if (s.pdfInfo.backBlankImg != "") {
-        const p2 = await getImg(pdfDoc, s.pdfInfo.backBlankImg, "upload");
+    } else if (s.pages[s.currentPage].info.backBlankImg != "") {
+        const p2 = await getImg(pdfDoc, s.pages[s.currentPage].info.backBlankImg, "upload");
         putImage(page, p2, p2X, p2Y, p2Dims.width, p2Dims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, p2X, p2Y, p2Dims.width, p2Dims.height, "SHIRT BACK", placeHolderFont);
@@ -375,7 +387,7 @@ async function template1(pdfDoc, page) {
 
     const c1X = p1X;
     const c1Y = p1Y - captionLineHeight;
-    const c1 = getCaptionString(s.pdfInfo.c1);
+    const c1 = getCaptionString(s.pages[s.currentPage].info.c1);
     page.drawText(c1.join("\n"), {
         x: c1X,
         y: c1Y,
@@ -395,8 +407,7 @@ async function template1(pdfDoc, page) {
     // SHIRT BACK CAPTION
     const c2X = p2X;
     const c2Y = p2Y - captionLineHeight;
-    const c2 = getCaptionString(s.pdfInfo.c2);
-    console.log(s.pdfInfo.c2);
+    const c2 = getCaptionString(s.pages[s.currentPage].info.c2);
     page.drawText(c2.join("\n"), {
         x: c2X,
         y: c2Y,
@@ -420,8 +431,8 @@ async function template1(pdfDoc, page) {
     }
     const frontLogoX = marginSide;
     const frontLogoY = Math.min(c1TextBottomY, c2TextBottomY) - frontLogoDims.height - captionLineHeight / 2;
-    if (s.pdfInfo.frontLogoImg != "") {
-        const frontLogo = await getImg(pdfDoc, s.pdfInfo.frontLogoImg, "upload");
+    if (s.pages[s.currentPage].info.frontLogoImg != "") {
+        const frontLogo = await getImg(pdfDoc, s.pages[s.currentPage].info.frontLogoImg, "upload");
         putImage(page, frontLogo, frontLogoX, frontLogoY, frontLogoDims.width, frontLogoDims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, frontLogoX, frontLogoY, frontLogoDims.width, frontLogoDims.height, "LOGO FRONT", placeHolderFont);
@@ -434,15 +445,15 @@ async function template1(pdfDoc, page) {
     }
     const backLogoX = p2X;
     const backLogoY = Math.min(c1TextBottomY, c2TextBottomY) - backLogoDims.height - captionLineHeight / 2;
-    if (s.pdfInfo.backLogoImg != "") {
-        const backLogo = await getImg(pdfDoc, s.pdfInfo.backLogoImg, "upload");
+    if (s.pages[s.currentPage].info.backLogoImg != "") {
+        const backLogo = await getImg(pdfDoc, s.pages[s.currentPage].info.backLogoImg, "upload");
         putImage(page, backLogo, backLogoX, backLogoY, backLogoDims.width, backLogoDims.height, false);
     } else if (!s.showPrintPreview) {
         putImageBorder(page, backLogoX, backLogoY, backLogoDims.width, backLogoDims.height, "LOGO BACK", placeHolderFont);
     }
 
     // COLOR CIRCLES
-    const frontLogoColors = s.pdfInfo.frontLogoColors
+    const frontLogoColors = s.pages[s.currentPage].info.frontLogoColors
         .filter(color => color.trim() !== "") // remove empty strings
         .map(color => color.replace(/^#/, "")); // remove leading #
     const circleSize = 26; // radius
@@ -454,7 +465,7 @@ async function template1(pdfDoc, page) {
     drawCircles(page, frontLogoColorX, frontLogoColorY, frontLogoColors, circleSize, captionFont, frontLogoMaxWidth);
 
     //  BACK LOGO COLORS
-    const backLogoColors = s.pdfInfo.backLogoColors
+    const backLogoColors = s.pages[s.currentPage].info.backLogoColors
         .filter(color => color.trim() !== "") // remove empty strings
         .map(color => color.replace(/^#/, "")); // remove leading #
     let backLogoColorX = p2X + circleSize;
@@ -464,7 +475,7 @@ async function template1(pdfDoc, page) {
 
     // BOTTOM TEXT
     const mockupNumFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
-    const mockupNum = "Mockup " + s.pdfInfo.mockupNum;
+    const mockupNum = "Mockup " + s.pages[s.currentPage].info.mockupNum;
     const mockupNumX = marginSide;
     const mockupNumY = marginTop / 2;
     const mockupNumFontSize = 18;
@@ -488,9 +499,9 @@ async function template1(pdfDoc, page) {
 window.handlePopupData = function(data) {
     const side = data.side;
     if (side == "front") {
-        s.pdfInfo.shirtFrontImg = data.imgUrl;
+        s.pages[s.currentPage].info.shirtFrontImg = data.imgUrl;
     } else if (side == "back") {
-        s.pdfInfo.shirtBackImg = data.imgUrl;
+        s.pages[s.currentPage].info.shirtBackImg = data.imgUrl;
     } else {
         console.error("invalid side");
     }
@@ -511,24 +522,24 @@ export async function adjustLogo(side) {
     var blankUrl = "";
     var logoUrl = "";
     if (side == "front") {
-        if (s.pdfInfo.frontBlankImg != "") {
-            blankUrl = s.pdfInfo.frontBlankImg.name;
+        if (s.pages[s.currentPage].info.frontBlankImg != "") {
+            blankUrl = s.pages[s.currentPage].info.frontBlankImg.name;
         } else {
             showWarning("Must upload front shirt blank image before adjusting"); return;
         }
-        if (s.pdfInfo.frontLogoImg != "") {
-            logoUrl = s.pdfInfo.frontLogoImg.name;
+        if (s.pages[s.currentPage].info.frontLogoImg != "") {
+            logoUrl = s.pages[s.currentPage].info.frontLogoImg.name;
         } else {
             showWarning("Must upload front logo image before adjusting"); return;
         }
     } else if (side == "back") {
-        if (s.pdfInfo.backBlankImg != "") {
-            blankUrl = s.pdfInfo.backBlankImg.name;
+        if (s.pages[s.currentPage].info.backBlankImg != "") {
+            blankUrl = s.pages[s.currentPage].info.backBlankImg.name;
         } else {
             showWarning("Must upload back shirt blank image before adjusting"); return;
         }
-        if (s.pdfInfo.backLogoImg != "") {
-            logoUrl = s.pdfInfo.backLogoImg.name;
+        if (s.pages[s.currentPage].info.backLogoImg != "") {
+            logoUrl = s.pages[s.currentPage].info.backLogoImg.name;
         } else {
             showWarning("Must upload back logo image before adjusting"); return;
         }
@@ -545,12 +556,13 @@ export async function adjustLogo(side) {
 export async function createPdf() {
     var pdfDoc = await PDFDocument.create();
 
-    const page = pdfDoc.addPage([s.pageWidth, s.pageHeight]);
-
-    if (s.currentPageType == 1) {
-        await template1(pdfDoc, page);
-    } else if (s.currentPageType == 2) {
-        await template2(pdfDoc, page);
+    for (const page of s.pages) {
+        const newPage = pdfDoc.addPage([s.pageWidth, s.pageHeight]);
+        if (page.type == 1) {
+            await template1(pdfDoc, newPage);
+        } else if (page.type == 2) {
+            await template2(pdfDoc, newPage);
+        }
     }
 
     const pdfBytes = await pdfDoc.save();

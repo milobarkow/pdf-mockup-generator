@@ -1,4 +1,10 @@
-export var pdfInfo = {
+export const pageWidth = 720;
+export const pageHeight = 1080;
+export var pageCount = 1;
+export var logoOnFrontBlank = false;
+export var logoOnBackBlank = false;
+
+export var defaultPdfInfo = {
     title: "Title",
     subtitle: "Subtitle",
     logoPath: "/pdf-mockup-generator/logo.png",
@@ -27,35 +33,49 @@ export var pdfInfo = {
     mockupNum: "#0000000",
     pdfName: "mockup.pdf",
 };
-export const defaultPdfInfo = JSON.parse(JSON.stringify(pdfInfo));
 
-export const pageWidth = 720;
-export const pageHeight = 1080;
-export var pageCount = 1;
-export var logoOnFrontBlank = false;
-export var logoOnBackBlank = false;
-
-export var showPrintPreview = false;
-export async function togglePrintPreview() {
-    console.log("toggling print preview (border boxes)");
-    showPrintPreview = !showPrintPreview;
+export var currentPage = 0;
+export var pages = [{
+    type: 1,
+    info: JSON.parse(JSON.stringify(defaultPdfInfo))
+}];
+export function getCurrentPage() { return pages[currentPage]; }
+function updateTotalPages() {
+    document.getElementById("page-count-label").textContent = "Total Pages: " + pages.length.toString();
+}
+export function addPage() {
+    pages.push({
+        type: 1,
+        info: JSON.parse(JSON.stringify(defaultPdfInfo))
+    });
+    updateTotalPages();
 }
 
-export var currentPage = 1;
-export var currentPageType = 1;
-export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
+export function changeDirection(direction) {
+    if (direction == "incr" && currentPage < pages.length - 1) {
+        console.log("incrementing page");
+        currentPage += 1;
+        document.getElementById("current-page-input").value = currentPage + 1;
+    } else if (direction == "decr" && currentPage > 0) {
+        console.log("decrementing page");
+        currentPage -= 1;
+        document.getElementById("current-page-input").value = currentPage + 1;
+    }
+    changeCurrentPage(`template${pages[currentPage].type}`);
+}
+
+export function changeCurrentPage(newCurrentPageType) {
     console.log("updating current page and page type");
 
-    currentPage = newCurrentPage;
     const form1Container = document.getElementById("pdf-form-container-1");
     const form2Container = document.getElementById("pdf-form-container-2");
 
     if (newCurrentPageType == "template1") {
-        currentPageType = 1;
+        pages[currentPage].type = 1;
         form1Container.style.display = "block";
         form2Container.style.display = "none"
     } else if (newCurrentPageType == "template2") {
-        currentPageType = 2;
+        pages[currentPage].type = 2;
         form1Container.style.display = "none";
         form2Container.style.display = "block"
     } else {
@@ -63,12 +83,19 @@ export async function updateCurrentPage(newCurrentPage, newCurrentPageType) {
         return;
     }
 
-    const formId = `pdf-form-${currentPageType}`;
+    const formId = `pdf-form-${pages[currentPage].type}`;
     document
         .querySelectorAll('#form-buttons button')
         .forEach(btn => {
             btn.setAttribute('form', formId);
         });
 }
-updateCurrentPage(1, "template1");
+changeCurrentPage("template1");
+updateTotalPages();
+
+export var showPrintPreview = false;
+export function togglePrintPreview() {
+    console.log("toggling print preview (border boxes)");
+    showPrintPreview = !showPrintPreview;
+}
 

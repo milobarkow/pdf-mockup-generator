@@ -1,5 +1,6 @@
 import { createPdf, updatePdfInfo, clearFormInputs, resetPdfInfo, adjustLogo } from "./mockup.mjs";
-import { pdfInfo, togglePrintPreview, updateCurrentPage, currentPageType } from "./state.mjs"
+import { pages, currentPage, togglePrintPreview, changeCurrentPage, addPage, changeDirection } from "./state.mjs"
+import { showWarning } from "./util.mjs";
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
@@ -19,7 +20,8 @@ async function renderPdf(pdfData) {
     var maxWidth = 0;
     var scale = 1;
 
-    for (let i = 1; i <= pdf.numPages; i++) {
+    // for (let i = 1; i <= pdf.numPages; i++) {
+    for (let i = 1; i <= 1; i++) {
         const page = await pdf.getPage(i);
         const viewport = page.getViewport({ scale: scale });
         totalHeight += viewport.height;
@@ -33,7 +35,8 @@ async function renderPdf(pdfData) {
 
     var yOffset = 0;
 
-    for (let i = 0; i < pdf.numPages; i++) {
+    // for (let i = 0; i < pdf.numPages; i++) {
+    for (let i = 0; i < 1; i++) {
         const page = pageViewports[i].page;
         const viewport = pageViewports[i].viewport;
 
@@ -56,53 +59,72 @@ async function renderPdf(pdfData) {
     }
 }
 
-// set defaults and render on initial open
-(async () => {
-    const pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-})();
-
 async function exportPdf(pdfBytes) {
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = pdfInfo.pdfName;
+    link.download = pages[currentPage].info.pdfName;
     document.body.appendChild(link);
     link.click();
 
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
 
-    console.log(`PDF saved as ${pdfInfo.pdfName}`);
+    console.log(`PDF saved as ${pages[currentPage].info.pdfName}`);
     return;
 }
 
+// set defaults and render on initial open
+(async () => {
+    const pdfBytes = await createPdf();
+    await renderPdf(pdfBytes);
+})();
+
+document.getElementById("incrPage").addEventListener("click", async function() {
+    changeDirection("incr");
+    clearFormInputs();
+    var pdfBytes = await createPdf();
+    await renderPdf(pdfBytes);
+});
+document.getElementById("decrPage").addEventListener("click", async function() {
+    changeDirection("decr");
+    clearFormInputs();
+    var pdfBytes = await createPdf();
+    await renderPdf(pdfBytes);
+});
+
 document.getElementById("page-info-form").addEventListener("submit", async function(e) {
     e.preventDefault();
+    e.preventDefault(); // prevent page reload
 
-    const form = e.target;
+    const action = e.submitter?.value; // gets value of the button that triggered submit
 
-    document.getElementById(`pdf-form-${currentPageType}`).reset(); // clear current form before switching
-    updatePdfInfo(form);
+    if (action === "updateCurrentPage") {
+        const form = e.target;
 
-    const currentPage = parseInt(form.currentPage.value, 10);
-    const currentPageInput = document.getElementById("currentPage");
+        clearFormInputs();
 
-    const minPage = currentPageInput.min;
-    const maxPage = currentPageInput.max;
-    if (currentPage < minPage || currentPage > maxPage) {
-        alert(`Please enter a valid age between ${minPage} and ${maxPage}.`);
+        const newCurrentPage = parseInt(document.getElementById("current-page-input").value, 10);
+
+        const minPage = 1;
+        const maxPage = pages.length;
+        if (newCurrentPage < minPage || newCurrentPage > maxPage) {
+            showWarning(`Please enter a valid age between ${minPage} and ${maxPage}.`); return;
+        }
+
+        const newCurrentPageType = form.currentPageType.value;
+
+        changeCurrentPage(newCurrentPageType);
+        clearFormInputs();
+
+    } else if (action == "addPage") {
+        addPage();
     }
 
-    const newCurrentPageType = form.currentPageType.value;
-
-    await updateCurrentPage(currentPage, newCurrentPageType);
-    document.getElementById(`pdf-form-${currentPageType}`).reset(); // clear current form before switching
-    updatePdfInfo(form);
-
     var pdfBytes = await createPdf();
-    renderPdf(pdfBytes);
+    await renderPdf(pdfBytes);
+
 });
 
 
@@ -113,20 +135,21 @@ document.getElementById("page-info-form").addEventListener("submit", async funct
 });
 
 function clearFormImages(id, clearAll = false) {
+    const currentPageType = pages[currentPage].type;
     if (id == `frontBlankImgClear${currentPageType}` || clearAll) {
         document.getElementById(`frontBlankImage${currentPageType}`).value = "";
-        pdfInfo.shirtFrontImg = "";
-        pdfInfo.frontBlankImg = "";
+        pages[currentPage].info.shirtFrontImg = "";
+        pages[currentPage].info.frontBlankImg = "";
     } else if (id == `backBlankImgClear1` || clearAll) {
         document.getElementById(`backBlankImage${currentPageType}`).value = "";
-        pdfInfo.shirtBackImg = "";
-        pdfInfo.backBlankImg = "";
+        pages[currentPage].info.shirtBackImg = "";
+        pages[currentPage].info.backBlankImg = "";
     } else if (id == `shirtFrontLogoClear${currentPageType}` || clearAll) {
         document.getElementById(`frontLogoImage${currentPageType}`).value = "";
-        pdfInfo.frontLogoImg = "";
+        pages[currentPage].info.frontLogoImg = "";
     } else if (id == `shirtBackLogoClear2` || clearAll) {
         document.getElementById(`backLogoImage${currentPageType}`).value = "";
-        pdfInfo.backLogoImg = "";
+        pages[currentPage].info.backLogoImg = "";
     }
 }
 
@@ -138,7 +161,7 @@ async function onPdfFormSubmit(e) {
     if (action === "updatePdf") {
         updatePdfInfo(e.target);
     } else if (action === "resetInfo") {
-        resetPdfInfo();
+        await resetPdfInfo();
     } else if (action === "clearForm") {
         clearFormInputs();
     } else if (action === "clearImg") {
@@ -152,7 +175,7 @@ async function onPdfFormSubmit(e) {
     }
 
     var pdfBytes = await createPdf();
-    renderPdf(pdfBytes);
+    await renderPdf(pdfBytes);
 
     if (action === "exportPdf") {
         exportPdf(pdfBytes);
