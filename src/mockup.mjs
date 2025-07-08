@@ -214,7 +214,7 @@ export function clearFormInputs() {
     document.getElementById(`pdf-form-${s.pages[s.currentPage].type}`).reset();
 }
 
-export async function resetPdfInfo() {
+export function resetPdfInfo() {
     console.log("restoring default PDF info");
     Object.assign(s.pages[s.currentPage].info, s.defaultPdfInfo);
 }

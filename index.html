@@ -40,17 +40,25 @@
                     <div class="page-counter-row">
                         <label class="sub-label" id="page-count-label">Total Pages: 1</label>
                     </div>
+                    <div class="page-counter-row">
+                        <button form="page-info-form" id="add-page-button" type="submit" name="action"
+                            value="addPage">Add Page</button>
+                    </div>
+                    <div class="page-counter-row">
+                        <button form="page-info-form" id="remove-page-button" type="submit" name="action"
+                            value="removePage">Remove
+                            Page</button>
+                        <input type="text" id="remove-page-input" autocomplete="off">
+                    </div>
                 </div>
 
-                <label class="main-label" for="subtitle">Current Page Type</label>
+                <label class="sub-label" for="subtitle">Current Page Type</label>
                 <select id="currentPageType" autocomplete="off">
-                    <option value="">-- Select --</option>
                     <option value="template1" autocomplete="off">Template 1</option>
                     <option value="template2" autocomplete="off">Template 2</option>
                 </select>
                 <button form="page-info-form" type="submit" name="action" value="updateCurrentPage">Update Current
-                    Page</button>
-                <!-- <button form="page-info-form" type="submit" name="action" value="addPage">Add Page</button> -->
+                    Page Type</button>
             </form>
 
             <div class="form-container" id="pdf-form-container-1">
@@ -194,7 +202,7 @@
 
         <div class="container-item" id="form-buttons">
             <button form="pdf-form-1" type="submit" name="action" value="updatePdf">Update Mockup</button>
-            <button form="pdf-form-1" type="submit" name="action" value="resetInfo">Reset Defaults</button>
+            <button form="pdf-form-1" type="submit" name="action" value="resetDefaults">Reset Defaults</button>
             <button form="pdf-form-1" type="submit" name="action" value="exportPdf">Export Pdf</button>
             <button form="pdf-form-1" type="submit" name="action" value="clearForm">Clear Form</button>
             <button form="pdf-form-1" type="submit" name="action" value="togglePrintPreview">Toggle Print

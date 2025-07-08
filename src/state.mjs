@@ -1,3 +1,5 @@
+import { showWarning } from "./util.mjs";
+
 export const pageWidth = 720;
 export const pageHeight = 1080;
 export var pageCount = 1;
@@ -43,6 +45,9 @@ export function getCurrentPage() { return pages[currentPage]; }
 function updateTotalPages() {
     document.getElementById("page-count-label").textContent = "Total Pages: " + pages.length.toString();
 }
+function updateCurentPageInput() {
+    document.getElementById("current-page-input").value = currentPage + 1;
+}
 export function addPage() {
     pages.push({
         type: 1,
@@ -51,15 +56,35 @@ export function addPage() {
     updateTotalPages();
 }
 
+export function removePage() {
+
+    const pageToRemove = parseInt(document.getElementById("remove-page-input").value, 10) - 1;
+
+    if (Number.isNaN(pageToRemove) || pageToRemove < 0 || pageToRemove > pages.length - 1) {
+        showWarning(`Please enter a valid page number between 1 and ${pages.length}`);
+        return;
+    }
+    pages.splice(pageToRemove, 1);
+
+    if (pages.length === 0) { // if there are no pages, add default page 
+        addPage();
+    } else if (pageToRemove === pages.length - 1) { // if current page is last and to be remove, decrese current page
+        currentPage -= 1;
+        updateCurentPageInput();
+    }
+
+    updateTotalPages();
+}
+
 export function changeDirection(direction) {
     if (direction == "incr" && currentPage < pages.length - 1) {
         console.log("incrementing page");
         currentPage += 1;
-        document.getElementById("current-page-input").value = currentPage + 1;
+        updateCurentPageInput();
     } else if (direction == "decr" && currentPage > 0) {
         console.log("decrementing page");
         currentPage -= 1;
-        document.getElementById("current-page-input").value = currentPage + 1;
+        updateCurentPageInput();
     }
     changeCurrentPage(`template${pages[currentPage].type}`);
 }

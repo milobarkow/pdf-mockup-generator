@@ -50,22 +50,29 @@ form {
 .page-counter-row {
     display: flex;
     width: 100%;
+    align-items: center;
+    /* background-color: #000000; */
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-.page-counter-row button {
+#decrPage, #incrPage {
     flex: 1;
     margin: 0.2rem;
     box-sizing: border-box;
     max-width: 20%;
 }
 
-#current-page-input {
+#add-page-button, #remove-page-button {
+    margin: 0;
+}
+
+#current-page-input, #remove-page-input {
     width: 5ch;
     padding: 0.25em;
     text-align: center;
     box-sizing: border-box;
     margin: 0.2rem;
-
 }
 
 .pdf-form {

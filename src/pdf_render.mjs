@@ -1,44 +1,39 @@
 import { createPdf, updatePdfInfo, clearFormInputs, resetPdfInfo, adjustLogo } from "./mockup.mjs";
-import { pages, currentPage, togglePrintPreview, changeCurrentPage, addPage, changeDirection } from "./state.mjs"
+import { pages, currentPage, togglePrintPreview, changeCurrentPage, addPage, removePage, changeDirection } from "./state.mjs"
 import { showWarning } from "./util.mjs";
 
 var canvas = document.getElementById('pdf-canvas');
 var context = canvas.getContext('2d');
 
-async function renderPdf(pdfData) {
-    var loadingTask;
-    if (typeof pdfData === "undefined") {
+var pdf = null;
+var pdfBytes = null;
+var pageRendering = false;
+var pageNumPending = null;
+
+
+// multi page rendering taken from https://mozilla.github.io/pdf.js/examples/
+
+export async function renderPdfPage(pageNum) {
+
+    if (typeof pdfBytes === "undefined" || pdfBytes === null) {
         console.error("no PDF data provided");
-    } else {
-        loadingTask = pdfjsLib.getDocument({ data: pdfData });
+        return;
     }
 
-    var pdf = await loadingTask.promise;
-
-    const pageViewports = [];
     var totalHeight = 0;
     var maxWidth = 0;
     var scale = 1;
 
-    // for (let i = 1; i <= pdf.numPages; i++) {
-    for (let i = 1; i <= 1; i++) {
-        const page = await pdf.getPage(i);
+    pdf.getPage(pageNum).then(function(page) {
         const viewport = page.getViewport({ scale: scale });
         totalHeight += viewport.height;
         maxWidth = Math.max(maxWidth, viewport.width);
-        pageViewports.push({ page, viewport });
-    }
 
-    var outputScale = 0.9;
-    canvas.width = Math.floor(maxWidth * outputScale);
-    canvas.height = Math.floor(totalHeight * outputScale);
+        var outputScale = 0.9;
+        canvas.width = Math.floor(maxWidth * outputScale);
+        canvas.height = Math.floor(totalHeight * outputScale);
 
-    var yOffset = 0;
-
-    // for (let i = 0; i < pdf.numPages; i++) {
-    for (let i = 0; i < 1; i++) {
-        const page = pageViewports[i].page;
-        const viewport = pageViewports[i].viewport;
+        var yOffset = 0;
 
         context.strokeStyle = '#ccc';     // light gray border
         context.lineWidth = 2;
@@ -52,14 +47,58 @@ async function renderPdf(pdfData) {
             transform: transform,
             viewport: viewport
         };
-        await page.render(renderContext).promise;
-        context.restore();
+
+        var renderTask = page.render(renderContext);
+
+        // Wait for rendering to finish
+        renderTask.promise.then(function() {
+            pageRendering = false;
+            if (pageNumPending !== null) {
+                // New page rendering is pending
+                renderPdfPage(pageNumPending);
+                pageNumPending = null;
+            }
+        });
 
         yOffset += viewport.height;
+    });
+}
+
+function queueRenderPage(num) {
+    if (pageRendering) {
+        pageNumPending = num;
+    } else {
+        renderPdfPage(num);
     }
 }
 
-async function exportPdf(pdfBytes) {
+document.getElementById("incrPage").addEventListener("click", async function() {
+    changeDirection("incr");
+    clearFormInputs();
+    queueRenderPage(currentPage + 1);
+});
+
+document.getElementById("decrPage").addEventListener("click", async function() {
+    changeDirection("decr");
+    clearFormInputs();
+    queueRenderPage(currentPage + 1);
+});
+
+async function updateOnPdfChange() {
+    pdfBytes = await createPdf();
+    pdfjsLib.getDocument({ data: pdfBytes }).promise.then(async function(pdfDoc) {
+        pdf = pdfDoc;
+        await renderPdfPage(currentPage + 1);
+    });
+}
+
+// update pdf on initial open
+(async () => {
+    updateOnPdfChange();
+})();
+
+async function exportPdf() {
+    pdfBytes = await createPdf();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
     const link = document.createElement('a');
@@ -75,24 +114,6 @@ async function exportPdf(pdfBytes) {
     return;
 }
 
-// set defaults and render on initial open
-(async () => {
-    const pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-})();
-
-document.getElementById("incrPage").addEventListener("click", async function() {
-    changeDirection("incr");
-    clearFormInputs();
-    var pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-});
-document.getElementById("decrPage").addEventListener("click", async function() {
-    changeDirection("decr");
-    clearFormInputs();
-    var pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-});
 
 document.getElementById("page-info-form").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -120,11 +141,11 @@ document.getElementById("page-info-form").addEventListener("submit", async funct
 
     } else if (action == "addPage") {
         addPage();
+    } else if (action == "removePage") {
+        removePage();
     }
 
-    var pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-
+    updateOnPdfChange();
 });
 
 
@@ -158,26 +179,15 @@ async function onPdfFormSubmit(e) {
 
     const action = e.submitter?.value; // gets value of the button that triggered submit
 
-    if (action === "updatePdf") {
-        updatePdfInfo(e.target);
-    } else if (action === "resetInfo") {
-        await resetPdfInfo();
-    } else if (action === "clearForm") {
-        clearFormInputs();
-    } else if (action === "clearImg") {
-        clearFormImages(e.submitter?.id); return;
-    } else if (action === "togglePrintPreview") {
-        togglePrintPreview();
-    } else if (action === "adjustFrontLogo") {
-        await adjustLogo("front");
-    } else if (action === "adjustBackLogo") {
-        await adjustLogo("back");
-    }
-
-    var pdfBytes = await createPdf();
-    await renderPdf(pdfBytes);
-
-    if (action === "exportPdf") {
-        exportPdf(pdfBytes);
+    switch (action) {
+        case "updatePdf": updatePdfInfo(e.target); updateOnPdfChange(); break;
+        case "resetDefaults": resetPdfInfo(); updateOnPdfChange(); break;
+        case "clearForm": clearFormInputs(); break;
+        case "clearImg": clearFormImages(e.submitter?.id); break;
+        case "togglePrintPreview": togglePrintPreview(); updateOnPdfChange(); break;
+        case "adjustFrontLogo": await adjustLogo("front"); break;
+        case "adjustBackLogo": await adjustLogo("back"); break;
+        case "exportPdf": await exportPdf(); break;
+        default: break;
     }
 }
