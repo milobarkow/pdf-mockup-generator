@@ -1,4 +1,4 @@
-import { Canvas, Image } from 'fabric'
+import { Canvas, Image } from 'fabric' // fabric v6
 
 const params = new URLSearchParams(window.location.search);
 const blankUrl = params.get("blank");
