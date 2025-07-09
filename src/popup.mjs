@@ -4,6 +4,7 @@ const params = new URLSearchParams(window.location.search);
 const blankUrl = params.get("blank");
 const logoUrl = params.get("logo");
 const side = params.get("side");
+console.log(blankUrl, logoUrl);
 
 console.log("initializing canvas");
 const canvas = new Canvas("popup-canvas");
@@ -13,7 +14,6 @@ const canvasHeight = window.innerHeight * 0.9 * 0.98;
 
 canvas.setWidth(canvasWidth);
 canvas.setHeight(canvasHeight);
-// canvas.getElement().style.border = "2px solid #FF0000";
 canvas.getElement().style.backgroundColor = "#181818";
 
 async function setLogo() {

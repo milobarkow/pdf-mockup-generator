@@ -521,36 +521,40 @@ export async function adjustLogo(side) {
 
     var blankUrl = "";
     var logoUrl = "";
+    const currentPage = s.pages[s.currentPage];
     if (side == "front") {
-        if (s.pages[s.currentPage].info.frontBlankImg != "") {
-            blankUrl = s.pages[s.currentPage].info.frontBlankImg.name;
+        if (currentPage.info.frontBlankImg != "") {
+            blankUrl = currentPage.info.frontBlankImg.name;
         } else {
             showWarning("Must upload front shirt blank image before adjusting"); return;
         }
-        if (s.pages[s.currentPage].info.frontLogoImg != "") {
-            logoUrl = s.pages[s.currentPage].info.frontLogoImg.name;
+        if (currentPage.info.frontLogoImg != "") {
+            logoUrl = currentPage.info.frontLogoImg.name;
         } else {
             showWarning("Must upload front logo image before adjusting"); return;
         }
     } else if (side == "back") {
-        if (s.pages[s.currentPage].info.backBlankImg != "") {
-            blankUrl = s.pages[s.currentPage].info.backBlankImg.name;
+        if (currentPage.info.backBlankImg != "") {
+            blankUrl = currentPage.info.backBlankImg.name;
         } else {
             showWarning("Must upload back shirt blank image before adjusting"); return;
         }
-        if (s.pages[s.currentPage].info.backLogoImg != "") {
-            logoUrl = s.pages[s.currentPage].info.backLogoImg.name;
+        if (currentPage.info.backLogoImg != "") {
+            logoUrl = currentPage.info.backLogoImg.name;
         } else {
             showWarning("Must upload back logo image before adjusting"); return;
         }
     }
 
-    // `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
-    window.open(
-        `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
-        "PopupWindow",
-        `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`
-    );
+    blankUrl = `${import.meta.env.BASE_URL}${blankUrl}`;
+    logoUrl = `${import.meta.env.BASE_URL}${logoUrl}`;
+    console.log(blankUrl, logoUrl);
+
+    // `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
+    const url = `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`;
+    const target = "PopupWindow";
+    const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`;
+    window.open(url, target, features);
     return;
 }
 
