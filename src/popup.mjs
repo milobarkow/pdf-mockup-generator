@@ -39,7 +39,7 @@ async function setLogo() {
             canvas.centerObject(logoImg);
             canvas.add(logoImg);
 
-            document.getElementById("reset-logo-button").addEventListener("click", async function() {
+            document.getElementById("reset-logo-button").addEventListener("click", async function () {
                 logoImg.set({
                     scaleX: 0.5,
                     scaleY: 0.5,
@@ -54,7 +54,7 @@ setLogo(); // call on load
 // document.getElementById("reset-logo-button").addEventListener("click", setLogo());
 
 
-document.getElementById("export-button").addEventListener("click", async function() {
+document.getElementById("export-button").addEventListener("click", async function () {
     console.log(`sending ${side} image back to main window`);
     const dataUrl = canvas.toDataURL({
         format: 'png',
@@ -64,11 +64,11 @@ document.getElementById("export-button").addEventListener("click", async functio
 
     const dataReturn = {
         imgUrl: dataUrl,
-        side: side,
+        side
     }
-    if (window.opener && typeof window.opener.handlePopupData === 'function') {
+
+    if (typeof window.opener?.handlePopupData === 'function') {
         window.opener.handlePopupData(dataReturn);
+        window.close();
     }
 });
-
-

@@ -496,17 +496,6 @@ async function template1(pdfDoc, page) {
     return pdfDoc
 }
 
-window.handlePopupData = function(data) {
-    const side = data.side;
-    if (side == "front") {
-        s.pages[s.currentPage].info.shirtFrontImg = data.imgUrl;
-    } else if (side == "back") {
-        s.pages[s.currentPage].info.shirtBackImg = data.imgUrl;
-    } else {
-        console.error("invalid side");
-    }
-};
-
 export async function adjustLogo(side) {
     console.log(`Adjusting ${side} Logo`);
 
@@ -521,41 +510,39 @@ export async function adjustLogo(side) {
 
     var blankUrl = "";
     var logoUrl = "";
-    const currentPage = s.pages[s.currentPage];
-    if (side == "front") {
-        if (currentPage.info.frontBlankImg != "") {
-            blankUrl = currentPage.info.frontBlankImg.name;
+    const currentPageInfo = s.pages[s.currentPage].info;
+    if (side === "front") {
+        if (currentPageInfo.frontBlankImg) {
+            blankUrl = URL.createObjectURL(currentPageInfo.frontBlankImg);
         } else {
             showWarning("Must upload front shirt blank image before adjusting"); return;
         }
-        if (currentPage.info.frontLogoImg != "") {
-            logoUrl = currentPage.info.frontLogoImg.name;
+        if (currentPageInfo.frontLogoImg) {
+            logoUrl = URL.createObjectURL(currentPageInfo.frontLogoImg);
         } else {
             showWarning("Must upload front logo image before adjusting"); return;
         }
-    } else if (side == "back") {
-        if (currentPage.info.backBlankImg != "") {
-            blankUrl = currentPage.info.backBlankImg.name;
+    } else if (side === "back") {
+        if (currentPageInfo.backBlankImg) {
+            blankUrl = URL.createObjectURL(currentPageInfo.backBlankImg);
         } else {
             showWarning("Must upload back shirt blank image before adjusting"); return;
         }
-        if (currentPage.info.backLogoImg != "") {
-            logoUrl = currentPage.info.backLogoImg.name;
+        if (currentPageInfo.backLogoImg) {
+            logoUrl = URL.createObjectURL(currentPageInfo.backLogoImg);
         } else {
             showWarning("Must upload back logo image before adjusting"); return;
         }
     }
 
-    blankUrl = `${import.meta.env.BASE_URL}${blankUrl}`;
-    logoUrl = `${import.meta.env.BASE_URL}${logoUrl}`;
-    console.log(blankUrl, logoUrl);
+    console.log(`blank URL: ${blankUrl}`);
+    console.log(`logo URL: ${logoUrl}`);
 
     // `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
     const url = `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`;
     const target = "PopupWindow";
     const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`;
     window.open(url, target, features);
-    return;
 }
 
 export async function createPdf() {
