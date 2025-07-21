@@ -191,3 +191,16 @@ async function onPdfFormSubmit(e) {
         default: break;
     }
 }
+
+window.handlePopupData = function(data) {
+    const side = data.side;
+    if (side === "front") {
+        pages[currentPage].info.shirtFrontImg = data.imgUrl;
+        updateOnPdfChange();
+    } else if (side === "back") {
+        pages[currentPage].info.shirtBackImg = data.imgUrl;
+        updateOnPdfChange();
+    } else {
+        console.error("invalid side");
+    }
+};
