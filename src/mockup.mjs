@@ -510,6 +510,8 @@ export async function adjustLogo(side) {
 
     var blankUrl = "";
     var logoUrl = "";
+    var logoPosSize = {};
+    // var logoX, logoY, logoW, logoH;
     const currentPageInfo = s.pages[s.currentPage].info;
     if (side === "front") {
         if (currentPageInfo.frontBlankImg) {
@@ -522,6 +524,7 @@ export async function adjustLogo(side) {
         } else {
             showWarning("Must upload front logo image before adjusting"); return;
         }
+        logoPosSize = s.pages[s.currentPage].info.frontLogoPosSize;
     } else if (side === "back") {
         if (currentPageInfo.backBlankImg) {
             blankUrl = URL.createObjectURL(currentPageInfo.backBlankImg);
@@ -533,13 +536,14 @@ export async function adjustLogo(side) {
         } else {
             showWarning("Must upload back logo image before adjusting"); return;
         }
+        logoPosSize = currentPageInfo.backLogoPosSize;
     }
 
     console.log(`blank URL: ${blankUrl}`);
     console.log(`logo URL: ${logoUrl}`);
+    console.log(`logo pos and size: ${logoPosSize}`);
 
-    // `popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`,
-    const url = `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}`;
+    const url = `${import.meta.env.BASE_URL}popup.html?blank=${encodeURIComponent(blankUrl)}&logo=${encodeURIComponent(logoUrl)}&side=${encodeURIComponent(side)}&logoPosSize=${encodeURIComponent(JSON.stringify(logoPosSize))}&`;
     const target = "PopupWindow";
     const features = `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`;
     window.open(url, target, features);

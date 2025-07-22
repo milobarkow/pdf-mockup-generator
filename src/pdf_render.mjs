@@ -197,11 +197,12 @@ window.handlePopupData = function(data) {
     const side = data.side;
     if (side === "front") {
         pages[currentPage].info.shirtFrontImg = data.imgUrl;
-        updateOnPdfChange();
+        Object.assign(pages[currentPage].info.frontLogoPosSize, data.logoPosSize);
     } else if (side === "back") {
         pages[currentPage].info.shirtBackImg = data.imgUrl;
-        updateOnPdfChange();
+        Object.assign(pages[currentPage].info.backLogoPosSize, data.logoPosSize);
     } else {
         console.error("invalid side");
     }
+    updateOnPdfChange();
 };

@@ -5,6 +5,13 @@ const blankUrl = params.get("blank");
 const logoUrl = params.get("logo");
 const side = params.get("side");
 
+const logoPosSize = JSON.parse(decodeURIComponent(params.get("logoPosSize")));
+var logoX = logoPosSize.x;
+var logoY = logoPosSize.y;
+var logoW = logoPosSize.w;
+var logoH = logoPosSize.h;
+const firstTimeIn = [logoX, logoY, logoW, logoH].every(val => val == null);
+
 console.log(`blank url: ${blankUrl}`);
 console.log(`logo url: ${logoUrl}`);
 
@@ -36,22 +43,57 @@ async function setLogo() {
                 scaleX: 0.5,
                 scaleY: 0.5,
             });
-            canvas.centerObject(logoImg);
+
+            if (firstTimeIn) {
+                canvas.centerObject(logoImg);
+            } else {
+                if (logoX != null) logoImg.set({ left: logoX });
+                if (logoY != null) logoImg.set({ top: logoY });
+                if (logoW != null) logoImg.set({ scaleX: logoW });
+                if (logoH != null) logoImg.set({ scaleY: logoH });
+            }
+
             canvas.add(logoImg);
 
-            document.getElementById("reset-logo-button").addEventListener("click", async function () {
+            // set intial position and scale
+            logoW = logoImg.scaleX;
+            logoH = logoImg.scaleY;
+            logoX = logoImg.getX();
+            logoY = logoImg.getY();
+
+            canvas.on('object:moving', (e) => {
+                const obj = e.target;
+                if (obj.type === 'image') {
+                    logoX = logoImg.getX();
+                    logoY = logoImg.getY();
+                }
+            });
+
+            canvas.on('object:scaling', (e) => {
+                const obj = e.target;
+                if (obj.type === 'image') {
+                    logoW = logoImg.scaleX;
+                    logoH = logoImg.scaleY;
+                }
+            });
+
+            document.getElementById("reset-logo-button").addEventListener("click", async function() {
                 logoImg.set({
                     scaleX: 0.5,
                     scaleY: 0.5,
                 });
                 canvas.centerObject(logoImg);
+                logoW = logoImg.scaleX;
+                logoH = logoImg.scaleY;
+                logoX = logoImg.getX();
+                logoY = logoImg.getY();
             });
         });
     });
 }
 setLogo(); // call on load
 
-document.getElementById("export-button").addEventListener("click", async function () {
+document.getElementById("export-button").addEventListener("click", async function() {
     console.log(`sending ${side} image back to main window`);
     const dataUrl = canvas.toDataURL({
         format: 'png',
@@ -59,8 +101,10 @@ document.getElementById("export-button").addEventListener("click", async functio
         multiplier: 5            // scale factor (optional)
     });
 
+    const logoPosSizeReturn = { x: logoX, y: logoY, w: logoW, h: logoH };
     const dataReturn = {
         imgUrl: dataUrl,
+        logoPosSize: logoPosSizeReturn,
         side
     }
 

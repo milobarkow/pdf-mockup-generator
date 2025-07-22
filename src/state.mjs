@@ -20,6 +20,8 @@ export var defaultPdfInfo = {
     backBlankImg: "",
     frontLogoImg: "",
     backLogoImg: "",
+    frontLogoPosSize: { x: null, y: null, w: null, h: null },
+    backLogoPosSize: { x: null, y: null, w: null, h: null },
     frontLogoColors: ["FF0000", "00FF00", "0000FF",],
     backLogoColors: ["FFFFFF", "000000"],
     c1: {
@@ -128,4 +130,3 @@ export function togglePrintPreview() {
     console.log("toggling print preview (border boxes)");
     showPrintPreview = !showPrintPreview;
 }
-
