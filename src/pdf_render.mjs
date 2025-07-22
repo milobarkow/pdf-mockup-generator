@@ -29,7 +29,7 @@ export async function renderPdfPage(pageNum) {
         totalHeight += viewport.height;
         maxWidth = Math.max(maxWidth, viewport.width);
 
-        var outputScale = 0.9;
+        var outputScale = 4;
         canvas.width = Math.floor(maxWidth * outputScale);
         canvas.height = Math.floor(totalHeight * outputScale);
 
