@@ -103,14 +103,15 @@ async function exportPdf() {
 
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = pages[currentPage].info.pdfName;
+    const pdfName = pages[currentPage].info.pdfName;
+    link.download = pdfName;
     document.body.appendChild(link);
     link.click();
 
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
 
-    console.log(`PDF saved as ${pages[currentPage].info.pdfName}`);
+    console.log(`PDF saved as ${pdfName}`);
     return;
 }
 

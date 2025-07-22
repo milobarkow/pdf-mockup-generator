@@ -49,6 +49,11 @@ function updateCurentPageInput() {
     document.getElementById("current-page-input").value = currentPage + 1;
 }
 export function addPage() {
+    const pageCountLimit = 3;
+    if (pages.length >= pageCountLimit) {
+        showWarning(`Max allowed pages: ${pageCountLimit}`);
+        return;
+    }
     pages.push({
         type: 1,
         info: JSON.parse(JSON.stringify(defaultPdfInfo))

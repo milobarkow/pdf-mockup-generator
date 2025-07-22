@@ -51,15 +51,12 @@ async function setLogo() {
 }
 setLogo(); // call on load
 
-// document.getElementById("reset-logo-button").addEventListener("click", setLogo());
-
-
 document.getElementById("export-button").addEventListener("click", async function () {
     console.log(`sending ${side} image back to main window`);
     const dataUrl = canvas.toDataURL({
         format: 'png',
         quality: 1.0,            // ignored for PNG
-        multiplier: 1            // scale factor (optional)
+        multiplier: 5            // scale factor (optional)
     });
 
     const dataReturn = {

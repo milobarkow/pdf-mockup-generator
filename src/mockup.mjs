@@ -140,11 +140,11 @@ export function updatePdfInfo(form) {
         case 1:
             {
                 if (form.title) {
-                    if (form.title.value == "") s.pages[s.currentPage].info.title = "Title";
+                    if (form.title.value == "") s.pages[s.currentPage].info.title = s.defaultPdfInfo.title;
                     else s.pages[s.currentPage].info.title = form.title.value;
                 }
                 if (form.subtitle) {
-                    if (form.subtitle.value == "") s.pages[s.currentPage].info.subtitle = "Subtitle";
+                    if (form.subtitle.value == "") s.pages[s.currentPage].info.subtitle = s.defaultPdfInfo.subtitle;
                     else s.pages[s.currentPage].info.subtitle = form.subtitle.value;
                 }
 
@@ -180,7 +180,7 @@ export function updatePdfInfo(form) {
 
                 if (form.mockupNum && form.mockupNum.value) s.pages[s.currentPage].info.mockupNum = form.mockupNum.value;
 
-                if (form.pdfName1) {
+                if (form.pdfName1 != "") {
                     s.pages[s.currentPage].info.pdfName = form.pdfName1.value;
                 } else {
                     s.pages[s.currentPage].info.pdfName = s.defaultPdfInfo.pdfName;
@@ -199,7 +199,7 @@ export function updatePdfInfo(form) {
                 if (form.printDimsFront2) s.pages[s.currentPage].info.c1.dims = form.printDimsFront2.value;
                 if (form.printLocFront2) s.pages[s.currentPage].info.c1.loc = form.printLocFront2.value;
 
-                if (form.pdfName2) {
+                if (form.pdfName2 != "") {
                     s.pages[s.currentPage].info.pdfName = form.pdfName2.value;
                 } else {
                     s.pages[s.currentPage].info.pdfName = s.defaultPdfInfo.pdfName;
